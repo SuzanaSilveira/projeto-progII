@@ -1,8 +1,8 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "API Amigo Fiel - Sistema de adoção de animais",
+  "main": "src/server.js",
   "type": "commonjs",
   "scripts": {
     "start": "node src/server.js",
@@ -14,8 +14,8 @@
     "type": "git",
     "url": "git+https://github.com/SuzanaSilveira/projeto-progII.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["adoção", "animais", "api"],
+  "author": "Isabel, Larissa, Suzana, Nathan",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/SuzanaSilveira/projeto-progII/issues"
