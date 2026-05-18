@@ -1,0 +1,34 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "API Amigo Fiel - Sistema de adoção de animais",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "generate": "node src/generate.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SuzanaSilveira/projeto-progII.git"
+  },
+  "keywords": ["adoção", "animais", "api"],
+  "author": "Isabel, Larissa, Suzana, Nathan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SuzanaSilveira/projeto-progII/issues"
+  },
+  "homepage": "https://github.com/SuzanaSilveira/projeto-progII#readme",
+  "dependencies": {
+    "better-sqlite3": "^12.10.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^4.22.2",
+    "sqlite": "^5.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
