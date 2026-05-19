@@ -7,7 +7,7 @@ router.post('/cadastro', usuarioController.cadastrar);
 router.post('/login', usuarioController.login);
 router.post('/buscar-cep', usuarioController.buscarCep);
 
-// Rotas que precisam de autenticação (vamos implementar depois)
+// Rotas que precisam de autenticação
 router.get('/:id', usuarioController.buscarPorId);
 router.put('/:id', usuarioController.atualizar);
 router.delete('/:id', usuarioController.deletar);
