@@ -35,9 +35,6 @@ router.post('/login', usuarioController.login);
  */
 router.post('/buscar-cep', usuarioController.buscarCep);
 
-<<<<<<< HEAD
-// Rotas que precisam de autenticação
-=======
 /**
  * @swagger
  * /api/usuarios/{id}:
@@ -53,7 +50,6 @@ router.post('/buscar-cep', usuarioController.buscarCep);
  *       200:
  *         description: Usuário encontrado
  */
->>>>>>> e28b37d8f03d24924f829b6d4912b863dc29056b
 router.get('/:id', usuarioController.buscarPorId);
 
 module.exports = router;
