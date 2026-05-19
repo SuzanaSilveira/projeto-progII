@@ -2,21 +2,122 @@ const express = require('express');
 const router = express.Router();
 const animalController = require('../controladores/animalController');
 
-// Rotas públicas
+/**
+ * @swagger
+ * /api/animais:
+ *   get:
+ *     summary: Lista todos os animais
+ *     responses:
+ *       200:
+ *         description: Lista de animais
+ */
 router.get('/', animalController.listarTodos);
+
+/**
+ * @swagger
+ * /api/animais/disponiveis:
+ *   get:
+ *     summary: Lista animais disponíveis para adoção
+ *     responses:
+ *       200:
+ *         description: Lista de animais disponíveis
+ */
 router.get('/disponiveis', animalController.listarDisponiveis);
-router.get('/:id', animalController.buscarPorId);
+
+/**
+ * @swagger
+ * /api/animais/buscar/por-especie/{especie}:
+ *   get:
+ *     summary: Buscar animais por espécie
+ *     parameters:
+ *       - in: path
+ *         name: especie
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de animais encontrados
+ */
 router.get('/buscar/por-especie/:especie', animalController.buscarPorEspecie);
+
+/**
+ * @swagger
+ * /api/animais/buscar/por-porte/{porte}:
+ *   get:
+ *     summary: Buscar animais por porte
+ *     parameters:
+ *       - in: path
+ *         name: porte
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de animais encontrados
+ */
 router.get('/buscar/por-porte/:porte', animalController.buscarPorPorte);
-router.post('/buscar/preferencias', animalController.buscarPorPreferencias);
 
-// Rotas de administrador
+/**
+ * @swagger
+ * /api/animais/{id}:
+ *   get:
+ *     summary: Buscar animal por ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Animal encontrado
+ */
+router.get('/:id', animalController.buscarPorId);
+
+/**
+ * @swagger
+ * /api/animais:
+ *   post:
+ *     summary: Cadastrar animal
+ *     responses:
+ *       201:
+ *         description: Animal cadastrado
+ */
 router.post('/', animalController.cadastrar);
-router.put('/:id', animalController.atualizar);
-router.delete('/:id', animalController.deletar);
-router.patch('/:id/status', animalController.atualizarStatus);
 
-// Rota de contato
-router.post('/:id/contato', animalController.enviarContato);
+/**
+ * @swagger
+ * /api/animais/{id}:
+ *   put:
+ *     summary: Atualizar animal
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Animal atualizado
+ */
+router.put('/:id', animalController.atualizar);
+
+/**
+ * @swagger
+ * /api/animais/{id}:
+ *   delete:
+ *     summary: Deletar animal
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Animal removido
+ */
+router.delete('/:id', animalController.deletar);
 
 module.exports = router;
