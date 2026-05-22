@@ -13,6 +13,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Servir arquivos estáticos (HTML/CSS)
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Swagger
 const options = {
     definition: {
@@ -37,13 +40,13 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 const usuariosRoutes = require('./rotas/Usuario');
 const animaisRoutes = require('./rotas/Animal');
 
-// Usar rotas
+// Rotas API
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/animais', animaisRoutes);
 
-// Rota teste
+// Página principal
 app.get('/', (req, res) => {
-    res.json({ message: 'API Amigo Fiel funcionando!' });
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Iniciar servidor
