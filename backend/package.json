@@ -14,7 +14,11 @@
     "type": "git",
     "url": "git+https://github.com/SuzanaSilveira/projeto-progII.git"
   },
-  "keywords": ["adoção", "animais", "api"],
+  "keywords": [
+    "adoção",
+    "animais",
+    "api"
+  ],
   "author": "Isabel, Larissa, Suzana, Nathan",
   "license": "ISC",
   "bugs": {
@@ -26,7 +30,9 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^4.22.2",
-    "sqlite": "^5.1.1"
+    "sqlite": "^5.1.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
