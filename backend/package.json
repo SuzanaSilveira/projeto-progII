@@ -32,10 +32,17 @@
     "express": "^4.22.2",
     "sqlite": "^5.1.1",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "swagger-jsdoc": "^6.3.0",
 =======
     "swagger-jsdoc": "^6.2.8",
 >>>>>>> a12dc8e (Correções)
+=======
+    "swagger-jsdoc": "^6.2.8",
+=======
+    "swagger-jsdoc": "^6.3.0",
+>>>>>>> 1f9de2c07ec8ba7ede428257f33d120019b5ec2b
+>>>>>>> f230621 (Atualizar arquivos do projeto)
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
