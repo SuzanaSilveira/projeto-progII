@@ -359,3 +359,76 @@ style.css
       font-size: 1.3rem;
     }
     .adoption-highlight span { font-size: .85rem; opacity: .75; }
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      color: rgba(255,255,255,.75);
+      padding: 60px 5% 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    .footer-brand .logo { color: #fff; margin-bottom: 1rem; display: flex; }
+    .footer-brand .logo-icon { background: var(--accent); }
+    .footer-brand p { font-size: .9rem; line-height: 1.7; max-width: 280px; }
+    .footer-social { display: flex; gap: 10px; margin-top: 1.2rem; }
+    .social-btn {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.08);
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+      cursor: pointer;
+    }
+    .social-btn:hover { background: var(--green); }
+    .social-btn svg { width: 16px; height: 16px; fill: #fff; }
+
+    .footer-col h5 {
+      font-family: 'Fraunces', serif;
+      font-weight: 700; font-size: 1rem;
+      color: #fff;
+      margin-bottom: .9rem;
+    }
+    .footer-col a {
+      display: block;
+      color: rgba(255,255,255,.6);
+      text-decoration: none;
+      font-size: .88rem;
+      margin-bottom: .5rem;
+      transition: color .2s;
+    }
+    .footer-col a:hover { color: var(--accent); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 1.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .82rem; color: rgba(255,255,255,.4);
+    }
+    .footer-bottom a { color: rgba(255,255,255,.4); text-decoration: none; }
+    .footer-bottom a:hover { color: #fff; }
+
+    /* ── HAMBURGER (mobile) ── */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--dark); border-radius: 2px; transition: .3s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav, .nav-actions { display: none; }
+      .hamburger { display: flex; }
+      .hero { grid-template-columns: 1fr; padding-top: 120px; text-align: center; }
+      .hero-sub { max-width: 100%; }
+      .hero-cta { justify-content: center; }
+      .hero-stats { justify-content: center; }
+      .hero-visual { display: none; }
+      .adoption-section { grid-template-columns: 1fr; gap: 2.5rem; }
+      .adoption-visual { display: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    }
+    @media (max-width: 580px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: .5rem; text-align: center; }
+    }
