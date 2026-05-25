@@ -50,6 +50,19 @@ db.exec(`
         FOREIGN KEY (remetente_id) REFERENCES usuarios(id),
         FOREIGN KEY (animal_id) REFERENCES animais(id)
     );
+
+    -- 🆕 Tabela para recuperação de senha (opcional, mas útil)
+    CREATE TABLE IF NOT EXISTS recuperacao_senha (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario_id INTEGER NOT NULL,
+        token TEXT NOT NULL,
+        expira_em DATETIME NOT NULL,
+        usado INTEGER DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+    );
 `);
+
+console.log('✅ Banco de dados inicializado com sucesso!');
 
 module.exports = db;
