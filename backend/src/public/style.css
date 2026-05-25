@@ -196,3 +196,166 @@ style.css
 
     @keyframes fadeUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* ── WAVE DIVIDER ── */
+    .wave { display: block; width: 100%; overflow: hidden; line-height: 0; }
+    .wave svg { display: block; }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 90px 5%; }
+    .section-label {
+      display: inline-block;
+      background: var(--green-light);
+      color: var(--green);
+      font-size: .8rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: 6px 14px; border-radius: 50px;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 3.5vw, 2.9rem);
+      letter-spacing: -.02em;
+      line-height: 1.1;
+      color: var(--dark);
+      margin-bottom: .8rem;
+    }
+    .section-sub {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 520px;
+      line-height: 1.65;
+    }
+    .section-header { margin-bottom: 3rem; }
+    .section-header.center { text-align: center; }
+    .section-header.center .section-sub { margin: 0 auto; }
+
+    /* ── ANIMALS GRID ── */
+    .animals-section { background: var(--cream); }
+    .animals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.6rem;
+    }
+
+    .animal-card {
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform .25s, box-shadow .25s;
+      cursor: pointer;
+    }
+    .animal-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(31,92,46,.12);
+    }
+
+    .card-img-wrap {
+      position: relative;
+      height: 210px;
+      overflow: hidden;
+    }
+    .card-img-wrap svg {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .card-badge {
+      position: absolute; top: 12px; left: 12px;
+      background: #22c55e;
+      color: #fff;
+      font-size: .72rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 50px;
+      letter-spacing: .05em;
+    }
+    .card-species {
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(255,255,255,.9);
+      font-size: .78rem; font-weight: 600;
+      padding: 4px 10px; border-radius: 50px;
+      color: var(--dark);
+    }
+
+    .card-body { padding: 1.2rem 1.4rem 1.4rem; }
+    .card-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1.35rem; font-weight: 700;
+      margin-bottom: .3rem;
+    }
+    .card-meta {
+      display: flex; gap: .5rem; flex-wrap: wrap;
+      margin-bottom: 1.1rem;
+    }
+    .tag {
+      background: var(--green-light);
+      color: var(--green);
+      font-size: .76rem; font-weight: 600;
+      padding: 3px 10px; border-radius: 50px;
+    }
+    .card-btn {
+      display: block; width: 100%;
+      padding: 11px;
+      border-radius: 10px;
+      background: var(--green);
+      color: #fff;
+      font-weight: 700; font-size: .9rem;
+      text-align: center; text-decoration: none;
+      border: none; cursor: pointer;
+      transition: background .2s;
+    }
+    .card-btn:hover { background: var(--green-mid); }
+
+    /* ── ADOPTION INFO ── */
+    .adoption-section {
+      background: var(--warm-white);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .adoption-steps { display: flex; flex-direction: column; gap: 1.5rem; }
+    .step {
+      display: flex; gap: 1.2rem; align-items: flex-start;
+      padding: 1.2rem;
+      border-radius: 14px;
+      transition: background .2s;
+    }
+    .step:hover { background: var(--green-light); }
+    .step-num {
+      width: 44px; height: 44px; flex-shrink: 0;
+      background: var(--green);
+      color: #fff;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fraunces', serif;
+      font-weight: 900; font-size: 1.1rem;
+    }
+    .step h4 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.05rem; font-weight: 700;
+      margin-bottom: .3rem;
+    }
+    .step p { font-size: .9rem; color: var(--muted); line-height: 1.55; }
+
+    .adoption-visual {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      aspect-ratio: 4/5;
+      background: var(--green);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .adoption-visual svg { width: 90%; height: 90%; }
+
+    .adoption-highlight {
+      position: absolute; bottom: -1px; left: 0; right: 0;
+      background: linear-gradient(0deg, var(--green) 0%, transparent 100%);
+      padding: 2.5rem 2rem 2rem;
+      color: #fff;
+    }
+    .adoption-highlight strong {
+      display: block;
+      font-family: 'Fraunces', serif;
+      font-size: 1.3rem;
+    }
+    .adoption-highlight span { font-size: .85rem; opacity: .75; }
