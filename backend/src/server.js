@@ -44,10 +44,14 @@ try {
     // Importar rotas
     const usuariosRoutes = require('./rotas/Usuario');
     const animaisRoutes = require('./rotas/Animal');
+    const authRoutes = require('./rotas/authRoutes');      // 🆕 ROTA DE AUTENTICAÇÃO
+    const adminRoutes = require('./rotas/adminRoutes');
 
     // Rotas API
     app.use('/api/usuarios', usuariosRoutes);
     app.use('/api/animais', animaisRoutes);
+    app.use('/api/auth', authRoutes);                       // 🆕 REGISTRANDO AUTH
+    app.use('/api/admin', adminRoutes);
 
     // Página principal
     app.get('/', (req, res) => {
@@ -67,6 +71,7 @@ try {
     app.listen(PORT, () => {
         console.log(`Servidor rodando: http://localhost:${PORT}`);
         console.log(`Swagger: http://localhost:${PORT}/api-docs`);
+        console.log(`🔐 Auth API: http://localhost:${PORT}/api/auth`);  // 🆕
     });
 
 } catch (erro) {

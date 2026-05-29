@@ -1,90 +1,111 @@
-const express = require('express');
-const cors = require('cors');
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
-const path = require('path');
-require('dotenv').config();
+// backend/src/controladores/authController.js
+const db = require('../database/database');
+const crypto = require('crypto');
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-try {
-
-    // Middlewares
-    app.use(cors());
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
-
-    // Servir arquivos estáticos
-    app.use(express.static(path.join(__dirname, 'public')));
-
-    // Swagger
-    const options = {
-        definition: {
-            openapi: '3.0.0',
-            info: {
-                title: 'API Amigo Fiel',
-                version: '1.0.0',
-                description: 'API para gerenciamento de usuários e animais'
-            }
-        },
-        apis: [
-            path.join(__dirname, 'rotas', 'Animal.js'),
-            path.join(__dirname, 'rotas', 'Usuario.js')
-        ]
-    };
-
-    const specs = swaggerJsdoc(options);
-
-    app.use('/api-docs',
-        swaggerUi.serve,
-        swaggerUi.setup(specs)
-    );
-
-    // Importar rotas
-    const usuariosRoutes = require('./rotas/Usuario');
-    const animaisRoutes = require('./rotas/Animal');
-    const authRoutes = require('./rotas/authRoutes');  // 🆕 NOVA ROTA
-
-    // Rotas API
-    app.use('/api/usuarios', usuariosRoutes);
-    app.use('/api/animais', animaisRoutes);
-    app.use('/api/auth', authRoutes);  // 🆕 ROTA DE AUTENTICAÇÃO
-
-    // Página principal
-    app.get('/', (req, res) => {
-        res.sendFile(path.join(__dirname, 'public', 'index.html'));
-    });
-
-    // Middleware global de erro
-    app.use((err, req, res, next) => {
-        console.error("Erro:", err.message);
-
-        res.status(500).json({
-            erro: "Erro interno no servidor"
-        });
-    });
-
-    // Iniciar servidor
-    app.listen(PORT, () => {
-        console.log(`Servidor rodando: http://localhost:${PORT}`);
-        console.log(`Swagger: http://localhost:${PORT}/api-docs`);
-        console.log(`🔐 Auth API: http://localhost:${PORT}/api/auth`);
-    });
-
-} catch (erro) {
-
-    console.error("Falha ao iniciar servidor:");
-    console.error(erro.message);
-
+function hashSenha(senha) {
+    return crypto.createHash('sha256').update(senha).digest('hex');
 }
 
+const authController = {
+    
+    // Realizar login
+    login(req, res) {
+        const { email, senha } = req.body;
 
-// Captura erros não tratados
-process.on('uncaughtException', (erro) => {
-    console.error('Erro não tratado:', erro.message);
-});
+      
+        console.log('📧 Email recebido:', email);
+        console.log('🔑 Senha recebida:', senha);
 
-process.on('unhandledRejection', (erro) => {
-    console.error('Promessa rejeitada:', erro);
-});
+        if (!email || !senha) {
+            return res.status(400).json({
+                erro: "Email e senha são obrigatórios"
+            });
+        }
+
+        try {
+            const senhaHash = hashSenha(senha);
+            
+            // 🔥 ADICIONE ESTE LOG AQUI
+            console.log('🔒 Hash gerado:', senhaHash);
+            
+            const stmt = db.prepare(`
+                SELECT id, nome, email, telefone, cep, tipo 
+                FROM usuarios 
+                WHERE email = ? AND senha = ?
+            `);
+            
+            const usuario = stmt.get(email, senhaHash);
+            
+            
+            console.log('👤 Usuário encontrado:', usuario);
+            
+            if (!usuario) {
+                return res.status(401).json({
+                    erro: "Email ou senha inválidos"
+                });
+            }
+            
+            const token = Buffer.from(`${usuario.id}:${usuario.email}`).toString('base64');
+            
+            return res.status(200).json({
+                mensagem: "Login realizado com sucesso",
+                usuario: {
+                    id: usuario.id,
+                    nome: usuario.nome,
+                    email: usuario.email,
+                    tipo: usuario.tipo
+                },
+                token: token
+            });
+        } catch (error) {
+            console.error('❌ Erro no login:', error);
+            return res.status(500).json({
+                erro: "Erro interno ao fazer login"
+            });
+        }
+    },
+
+    // Registrar novo usuário
+    registrar(req, res) {
+        const { nome, email, senha, telefone, cep } = req.body;
+
+        if (!nome || !email || !senha) {
+            return res.status(400).json({
+                erro: "Nome, email e senha são obrigatórios"
+            });
+        }
+
+        try {
+            const senhaHash = hashSenha(senha);
+            
+            const stmt = db.prepare(`
+                INSERT INTO usuarios (nome, email, senha, telefone, cep, tipo)
+                VALUES (?, ?, ?, ?, ?, 'adotante')
+            `);
+            
+            const info = stmt.run(nome, email, senhaHash, telefone || null, cep || null);
+            
+            return res.status(201).json({
+                mensagem: "Usuário cadastrado com sucesso",
+                usuario: {
+                    id: info.lastInsertRowid,
+                    nome: nome,
+                    email: email,
+                    tipo: 'adotante'
+                }
+            });
+        } catch (error) {
+            if (error.message.includes('UNIQUE constraint failed')) {
+                return res.status(400).json({
+                    erro: "Este e-mail já está cadastrado"
+                });
+            }
+            console.error('Erro no cadastro:', error);
+            return res.status(500).json({
+                erro: "Erro interno ao cadastrar usuário"
+            });
+        }
+    }
+};
+
+module.exports = authController;
