@@ -1,108 +1,155 @@
-login.html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login — Amigo Fiel</title>
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/responsive.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,400&display=swap" rel="stylesheet" />
+
   <style>
-    /* ── HEADER ── */
+    /* ════════════════════════
+       RESET + VARIÁVEIS
+    ════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:       #1F5C2E;
+      --green-mid:   #2D7A3F;
+      --green-light: #E8F2E9;
+      --cream:       #F5F0E8;
+      --warm-white:  #FDFAF4;
+      --dark:        #1A1A1A;
+      --muted:       #6B7280;
+      --accent:      #F4A035;
+      --radius:      18px;
+    }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      min-height: 100vh;
+      background: var(--green);
+    }
+
+    /* ════════════════════════
+       HEADER
+    ════════════════════════ */
     header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 5%;
-      background: rgba(253,250,244,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(31,92,46,0.08);
-      animation: slideDown .6s ease both;
+      padding: 16px 5%;
+      background: rgba(20,60,30,0.75);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      animation: slideDown .55s cubic-bezier(.22,1,.36,1) both;
     }
-    @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--green); }
-    .logo-icon { width: 42px; height: 42px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    .logo-icon svg { width: 22px; height: 22px; fill: var(--cream); }
-    .logo-text { font-family: 'Fraunces', serif; font-weight: 900; font-size: 1.35rem; letter-spacing: -.02em; }
-    nav { display: flex; align-items: center; gap: 2rem; }
-    nav a { text-decoration: none; color: var(--dark); font-weight: 500; font-size: .95rem; transition: color .2s; }
-    nav a:hover { color: var(--green); }
-    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to   { transform: translateY(0);     opacity: 1; }
+    }
+
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon {
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,.14);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .logo-icon svg { width: 20px; height: 20px; fill: #fff; }
+    .logo-text {
+      font-family: 'Fraunces', serif;
+      font-weight: 900; font-size: 1.25rem;
+      letter-spacing: -.02em; color: #fff;
+    }
+
+    nav { display: flex; align-items: center; gap: 1.8rem; }
+    nav a {
+      text-decoration: none; color: rgba(255,255,255,.65);
+      font-size: .88rem; font-weight: 500; transition: color .2s;
+    }
+    nav a:hover { color: #fff; }
+
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+    .nav-btn-ghost {
+      font-family: 'Sora', sans-serif;
+      font-size: .82rem; font-weight: 600;
+      padding: 8px 18px; border-radius: 50px;
+      background: rgba(255,255,255,.1);
+      color: #fff; border: 1px solid rgba(255,255,255,.2);
+      text-decoration: none; transition: background .2s;
+    }
+    .nav-btn-ghost:hover { background: rgba(255,255,255,.18); }
+    .nav-btn-accent {
+      font-family: 'Sora', sans-serif;
+      font-size: .82rem; font-weight: 700;
+      padding: 8px 18px; border-radius: 50px;
+      background: var(--accent); color: #fff; border: none;
+      text-decoration: none; transition: opacity .2s;
+    }
+    .nav-btn-accent:hover { opacity: .88; }
+
     .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
-    .hamburger span { display: block; width: 24px; height: 2px; background: var(--dark); border-radius: 2px; transition: .3s; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: rgba(255,255,255,.8); border-radius: 2px; transition: .3s; }
 
-    /* ── PAGE LAYOUT ── */
-    body { min-height: 100vh; }
-
+    /* ════════════════════════
+       LAYOUT SPLIT
+    ════════════════════════ */
     .login-page {
       min-height: 100vh;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1.08fr;
     }
 
-    /* ── LEFT PANEL (ilustração) ── */
+    /* ── PAINEL ESQUERDO ── */
     .login-visual {
       background: var(--green);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 100px 5% 60px;
-      position: relative;
-      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      padding: 110px 6% 70px;
+      position: relative; overflow: hidden;
     }
-
     .login-visual::before {
       content: '';
       position: absolute; inset: 0;
       background:
-        radial-gradient(ellipse 70% 60% at 20% 80%, rgba(244,160,53,.18) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 50% at 80% 20%, rgba(255,255,255,.05) 0%, transparent 60%);
-    }
-
-    /* decorative dots */
-    .visual-dots {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      overflow: hidden;
+        radial-gradient(ellipse 70% 55% at 85% 85%, rgba(244,160,53,.2) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 50% at 10% 10%, rgba(255,255,255,.05) 0%, transparent 55%);
       pointer-events: none;
     }
-    .visual-dots span {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255,255,255,.06);
+    .visual-ring {
+      position: absolute; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.06); pointer-events: none;
     }
-    .visual-dots span:nth-child(1) { width: 320px; height: 320px; top: -80px; right: -80px; }
-    .visual-dots span:nth-child(2) { width: 180px; height: 180px; bottom: 60px; left: -60px; }
-    .visual-dots span:nth-child(3) { width: 90px; height: 90px; top: 55%; left: 10%; background: rgba(244,160,53,.12); }
+    .visual-ring:nth-child(1) { width: 420px; height: 420px; top: -130px; right: -130px; }
+    .visual-ring:nth-child(2) { width: 220px; height: 220px; bottom: 30px; left: -70px; }
+    .visual-ring:nth-child(3) { width: 90px; height: 90px; top: 52%; left: 6%; border-color: rgba(244,160,53,.18); }
 
-    .visual-content { position: relative; z-index: 2; text-align: center; }
+    .visual-content { position: relative; z-index: 2; text-align: center; max-width: 380px; }
 
     .visual-tagline {
       font-family: 'Fraunces', serif;
       font-weight: 900;
-      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-size: clamp(1.8rem, 2.8vw, 2.7rem);
       color: var(--cream);
-      line-height: 1.1;
-      letter-spacing: -.03em;
-      margin-bottom: 1rem;
+      line-height: 1.08; letter-spacing: -.03em;
+      margin-bottom: .85rem;
     }
     .visual-tagline em { font-style: italic; color: var(--accent); }
 
     .visual-sub {
-      color: rgba(255,255,255,.65);
-      font-size: 1rem;
-      line-height: 1.65;
-      max-width: 340px;
-      margin: 0 auto 2.5rem;
+      color: rgba(255,255,255,.58);
+      font-size: .9rem; line-height: 1.7;
+      max-width: 300px; margin: 0 auto 1.8rem;
     }
 
-    .visual-illustration { width: 100%; max-width: 360px; margin: 0 auto; }
+    .visual-illustration { width: 100%; max-width: 320px; margin: 0 auto; }
 
     .visual-stats {
-      display: flex;
-      gap: 2rem;
-      margin-top: 2.5rem;
-      justify-content: center;
+      display: flex; gap: 2rem;
+      justify-content: center; margin-top: 2rem;
     }
     .v-stat { text-align: center; }
     .v-stat strong {
@@ -111,190 +158,207 @@ login.html
       font-size: 1.6rem; font-weight: 900;
       color: var(--accent);
     }
-    .v-stat span { font-size: .78rem; color: rgba(255,255,255,.55); }
+    .v-stat span { font-size: .78rem; color: rgba(255,255,255,.5); }
 
-    /* ── RIGHT PANEL (formulário) ── */
+    /* ── PAINEL DIREITO ── */
     .login-form-panel {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 100px 6% 60px;
-      background: var(--warm-white);
+      background: var(--green-mid);
+      display: flex; align-items: center; justify-content: center;
+      padding: 110px 5% 60px;
+      position: relative; overflow: hidden;
+    }
+    .login-form-panel::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 8% 12%, rgba(255,255,255,.07) 0%, transparent 50%),
+        radial-gradient(ellipse 55% 55% at 92% 92%, rgba(0,0,0,.18) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .login-form-panel::after {
+      content: ''; position: absolute;
+      width: 320px; height: 320px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.06);
+      top: -100px; right: -100px; pointer-events: none;
     }
 
+    /* ════════════════════════
+       CARD
+    ════════════════════════ */
     .login-card {
       width: 100%;
       max-width: 420px;
-      animation: fadeUp .6s .2s ease both;
+      background: var(--warm-white);
+      border-radius: 22px;
+      padding: 2.4rem 2.2rem 2rem;
+      box-shadow:
+        0 32px 80px rgba(0,0,0,.28),
+        0 6px 24px rgba(0,0,0,.12),
+        inset 0 1px 0 rgba(255,255,255,.9);
+      position: relative; z-index: 2;
+      overflow: hidden;
+      animation: cardIn .65s cubic-bezier(.22,1,.36,1) .15s both;
+    }
+    @keyframes cardIn {
+      from { transform: translateY(32px) scale(.97); opacity: 0; }
+      to   { transform: translateY(0)    scale(1);   opacity: 1; }
     }
 
-    @keyframes fadeUp { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+    /* ── CABEÇALHO ── */
+    .login-header { margin-bottom: 2rem; }
 
-    .login-header {
-      margin-bottom: 2.2rem;
-    }
     .login-badge {
-      display: inline-flex; align-items: center; gap: 7px;
-      background: var(--green-light);
-      color: var(--green);
-      font-size: .78rem; font-weight: 700;
-      letter-spacing: .08em; text-transform: uppercase;
-      padding: 5px 12px; border-radius: 50px;
-      margin-bottom: 1rem;
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--green-light); color: var(--green);
+      font-size: .7rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: 4px 11px; border-radius: 50px;
+      margin-bottom: .8rem;
     }
-    .login-badge span { width: 6px; height: 6px; background: var(--green); border-radius: 50%; display: inline-block; }
+    .login-badge span {
+      width: 5px; height: 5px;
+      background: var(--green); border-radius: 50%; display: inline-block;
+    }
 
     .login-title {
       font-family: 'Fraunces', serif;
-      font-weight: 900;
-      font-size: 2.2rem;
-      letter-spacing: -.03em;
-      color: var(--dark);
-      line-height: 1.1;
-      margin-bottom: .5rem;
+      font-weight: 900; font-size: 1.9rem;
+      letter-spacing: -.03em; color: var(--dark);
+      line-height: 1.1; margin-bottom: .35rem;
     }
-    .login-subtitle {
-      color: var(--muted);
-      font-size: .95rem;
-      line-height: 1.55;
-    }
+    .login-subtitle { color: var(--muted); font-size: .83rem; }
     .login-subtitle a { color: var(--green); font-weight: 600; text-decoration: none; }
     .login-subtitle a:hover { text-decoration: underline; }
 
-    /* ── FORM FIELDS ── */
+    /* ════════════════════════
+       CAMPOS
+    ════════════════════════ */
     .field {
-      display: flex;
-      flex-direction: column;
-      gap: .4rem;
-      margin-bottom: 1.2rem;
+      display: flex; flex-direction: column; gap: .3rem;
+      margin-bottom: .95rem;
+      min-width: 0;
     }
     .field label {
-      font-weight: 600;
-      font-size: .88rem;
-      color: var(--dark);
+      font-weight: 600; font-size: .78rem;
+      color: #374151; letter-spacing: .01em;
     }
-    .field-wrap {
-      position: relative;
-    }
+    .field-wrap { position: relative; width: 100%; min-width: 0; }
+
     .field-icon {
-      position: absolute;
-      left: 14px; top: 50%; transform: translateY(-50%);
-      width: 18px; height: 18px;
-      color: var(--muted);
-      pointer-events: none;
+      position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+      width: 15px; height: 15px;
+      color: #9CA3AF; pointer-events: none;
     }
+
     .field input {
-      width: 100%;
-      padding: 13px 14px 13px 42px;
+      width: 100%; min-width: 0;
+      padding: 11px 36px 11px 34px;
       border: 1.5px solid #E5E7EB;
-      border-radius: 12px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: .95rem;
-      color: var(--dark);
+      border-radius: 10px;
+      font-family: 'Sora', sans-serif;
+      font-size: .82rem; color: var(--dark);
       background: #fff;
       transition: border-color .2s, box-shadow .2s;
       outline: none;
+      box-sizing: border-box;
     }
     .field input:focus {
       border-color: var(--green);
-      box-shadow: 0 0 0 4px rgba(31,92,46,.08);
+      box-shadow: 0 0 0 3px rgba(31,92,46,.1);
     }
-    .field input::placeholder { color: #C0C0C0; }
+    .field input::placeholder { color: #D1D5DB; font-size: .8rem; }
 
-    /* password toggle */
+    /* toggle senha */
     .toggle-pw {
-      position: absolute;
-      right: 14px; top: 50%; transform: translateY(-50%);
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
       background: none; border: none; cursor: pointer;
-      color: var(--muted); padding: 0;
-      display: flex; align-items: center;
-      transition: color .2s;
+      color: #9CA3AF; padding: 0;
+      display: flex; align-items: center; transition: color .2s;
     }
     .toggle-pw:hover { color: var(--green); }
-    .toggle-pw svg { width: 18px; height: 18px; }
+    .toggle-pw svg { width: 15px; height: 15px; }
 
-    /* options row */
+    /* lembrar / esqueci */
     .form-options {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.6rem;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.4rem;
     }
     .checkbox-wrap {
-      display: flex; align-items: center; gap: 8px;
-      cursor: pointer;
+      display: flex; align-items: center; gap: 7px; cursor: pointer;
     }
     .checkbox-wrap input[type="checkbox"] {
-      width: 17px; height: 17px;
-      accent-color: var(--green);
-      cursor: pointer;
+      width: 15px; height: 15px;
+      accent-color: var(--green); cursor: pointer;
     }
-    .checkbox-wrap span { font-size: .88rem; color: var(--muted); }
+    .checkbox-wrap span { font-size: .8rem; color: var(--muted); }
     .forgot-link {
-      font-size: .88rem;
-      color: var(--green);
-      font-weight: 600;
-      text-decoration: none;
-      transition: opacity .2s;
+      font-size: .8rem; color: var(--green);
+      font-weight: 600; text-decoration: none; transition: opacity .2s;
     }
     .forgot-link:hover { opacity: .7; }
 
-    /* submit */
+    /* erro */
+    .field-error {
+      font-size: .72rem; color: #EF4444; display: none;
+    }
+    .field.invalid .field-error { display: block; }
+    .field.invalid input {
+      border-color: #EF4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,.08);
+    }
+
+    /* ── BOTÃO ENTRAR ── */
     .btn-login {
       width: 100%;
-      padding: 15px;
-      border-radius: 12px;
+      padding: 13px;
+      border-radius: 11px;
       background: var(--green);
       color: #fff;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      border: none;
-      cursor: pointer;
+      font-family: 'Sora', sans-serif;
+      font-weight: 700; font-size: .92rem;
+      border: none; cursor: pointer;
       transition: background .2s, transform .15s, box-shadow .2s;
-      box-shadow: 0 4px 16px rgba(31,92,46,.25);
-      margin-bottom: 1.2rem;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 4px 18px rgba(31,92,46,.3);
+      margin-bottom: 1.1rem;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
     }
-    .btn-login:hover {
-      background: var(--green-mid);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(31,92,46,.3);
-    }
+    .btn-login:hover { background: #256934; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(31,92,46,.35); }
     .btn-login:active { transform: translateY(0); }
-    .btn-login svg { width: 18px; height: 18px; fill: currentColor; }
+    .btn-login:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+    .btn-login svg { width: 16px; height: 16px; fill: currentColor; }
 
-    /* divider */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.35);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin .55s linear infinite; display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── DIVISOR ── */
     .divider {
-      display: flex; align-items: center; gap: 1rem;
-      margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: .9rem;
+      margin-bottom: 1rem;
     }
     .divider::before, .divider::after {
-      content: ''; flex: 1;
-      height: 1px; background: #E5E7EB;
+      content: ''; flex: 1; height: 1px; background: #E9EAEB;
     }
-    .divider span { font-size: .82rem; color: var(--muted); white-space: nowrap; }
+    .divider span { font-size: .75rem; color: #9CA3AF; white-space: nowrap; }
 
-    /* social login */
+    /* ── SOCIAL ── */
     .social-logins {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: .8rem;
-      margin-bottom: 1.8rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: .7rem; margin-bottom: 1.5rem;
     }
     .btn-social {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 12px;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 10px;
       border: 1.5px solid #E5E7EB;
-      border-radius: 12px;
+      border-radius: 10px;
       background: #fff;
-      font-family: 'DM Sans', sans-serif;
-      font-size: .88rem;
-      font-weight: 600;
-      color: var(--dark);
-      cursor: pointer;
-      text-decoration: none;
+      font-family: 'Sora', sans-serif;
+      font-size: .8rem; font-weight: 600;
+      color: var(--dark); cursor: pointer; text-decoration: none;
       transition: border-color .2s, box-shadow .2s, transform .15s;
     }
     .btn-social:hover {
@@ -302,54 +366,35 @@ login.html
       box-shadow: 0 4px 12px rgba(0,0,0,.06);
       transform: translateY(-1px);
     }
-    .btn-social svg { width: 18px; height: 18px; }
+    .btn-social svg { width: 16px; height: 16px; }
 
-    /* register link */
+    /* ── LINK CADASTRO ── */
     .register-prompt {
-      text-align: center;
-      font-size: .9rem;
-      color: var(--muted);
+      text-align: center; font-size: .82rem; color: var(--muted);
     }
-    .register-prompt a {
-      color: var(--green);
-      font-weight: 700;
-      text-decoration: none;
-    }
+    .register-prompt a { color: var(--green); font-weight: 700; text-decoration: none; }
     .register-prompt a:hover { text-decoration: underline; }
 
-    /* error/success states */
-    .field-error {
-      font-size: .8rem;
-      color: #EF4444;
-      display: none;
-    }
-    .field.invalid input { border-color: #EF4444; }
-    .field.invalid .field-error { display: block; }
-
-    /* loading spinner on btn */
-    .spinner {
-      width: 18px; height: 18px;
-      border: 2px solid rgba(255,255,255,.4);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin .6s linear infinite;
-      display: none;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── RESPONSIVE ── */
+    /* ════════════════════════
+       RESPONSIVO
+    ════════════════════════ */
     @media (max-width: 860px) {
       .login-page { grid-template-columns: 1fr; }
       .login-visual { display: none; }
-      .login-form-panel { padding: 110px 6% 60px; }
+      .login-form-panel { padding: 100px 5% 60px; background: var(--green); }
       nav, .nav-actions { display: none; }
       .hamburger { display: flex; }
+      .login-card { max-width: 100%; }
+    }
+    @media (max-width: 480px) {
+      .login-card { padding: 1.8rem 1.3rem 1.6rem; border-radius: 18px; }
+      .login-title { font-size: 1.65rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- ═══ HEADER ═══ -->
   <header>
     <a href="../index.html" class="logo">
       <div class="logo-icon">
@@ -363,105 +408,99 @@ login.html
       <a href="../index.html#adocao">Sobre</a>
     </nav>
     <div class="nav-actions">
-      <a href="login.html" class="btn-primary" style="font-size:.9rem;padding:10px 22px;">Login</a>
-      <a href="cadastro.html" class="btn-ghost" style="font-size:.9rem;padding:10px 20px;">Cadastro</a>
+      <a href="login.html" class="nav-btn-ghost">Login</a>
+      <a href="cadastro.html" class="nav-btn-accent">Cadastro</a>
     </div>
     <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
   </header>
 
-  <!-- PAGE -->
+  <!-- ═══ PAGE ═══ -->
   <main class="login-page">
 
-    <!-- LEFT: ilustração -->
+    <!-- PAINEL ESQUERDO -->
     <div class="login-visual">
-      <div class="visual-dots">
-        <span></span><span></span><span></span>
-      </div>
+      <div class="visual-ring"></div>
+      <div class="visual-ring"></div>
+      <div class="visual-ring"></div>
+
       <div class="visual-content">
         <p class="visual-tagline">Bem-vindo de<br>volta, <em>amigo</em>!</p>
         <p class="visual-sub">Sua conta te conecta a animais incríveis esperando por um lar cheio de amor e carinho.</p>
 
-        <!-- Ilustração SVG -->
         <div class="visual-illustration">
           <svg viewBox="0 0 360 300" xmlns="http://www.w3.org/2000/svg">
-            <!-- fundo decorativo -->
             <ellipse cx="180" cy="200" rx="170" ry="85" fill="rgba(255,255,255,.05)"/>
-            <ellipse cx="280" cy="100" rx="80" ry="70" fill="rgba(244,160,53,.12)"/>
-
-            <!-- Cachorro grande sentado -->
+            <ellipse cx="280" cy="100" rx="80"  ry="70" fill="rgba(244,160,53,.12)"/>
+            <!-- cachorro sentado -->
             <ellipse cx="120" cy="220" rx="72" ry="52" fill="#E8C87A"/>
-            <rect x="82" y="240" width="22" height="50" rx="11" fill="#D4A852"/>
+            <rect x="82"  y="240" width="22" height="50" rx="11" fill="#D4A852"/>
             <rect x="112" y="244" width="22" height="48" rx="11" fill="#D4A852"/>
             <rect x="142" y="244" width="22" height="46" rx="11" fill="#D4A852"/>
             <rect x="170" y="240" width="22" height="48" rx="11" fill="#D4A852"/>
-            <!-- cabeça cachorro -->
             <ellipse cx="82" cy="177" rx="46" ry="42" fill="#E8C87A"/>
             <ellipse cx="66" cy="163" rx="16" ry="20" fill="#D4A852"/>
             <ellipse cx="97" cy="163" rx="16" ry="20" fill="#D4A852"/>
             <ellipse cx="82" cy="192" rx="20" ry="13" fill="#D4A852"/>
-            <circle cx="74" cy="177" r="4.5" fill="#1A1A1A"/>
-            <circle cx="91" cy="177" r="4.5" fill="#1A1A1A"/>
+            <circle cx="74"   cy="177" r="4.5" fill="#1A1A1A"/>
+            <circle cx="91"   cy="177" r="4.5" fill="#1A1A1A"/>
             <circle cx="75.5" cy="175.5" r="1.5" fill="white"/>
             <circle cx="92.5" cy="175.5" r="1.5" fill="white"/>
             <ellipse cx="82" cy="200" rx="9" ry="6" fill="#C47A5A"/>
-            <!-- rabo -->
             <path d="M192 210 Q224 180 214 155" stroke="#E8C87A" stroke-width="14" fill="none" stroke-linecap="round"/>
-
-            <!-- Gato em cima de caixa -->
+            <!-- gato em cima da caixa -->
             <rect x="228" y="220" width="90" height="60" rx="10" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.2)" stroke-width="1.5"/>
-            <!-- coração na caixa -->
             <path d="M263 245 C263 241,267 238,271 241 C275 238,279 241,279 245 C279 251,271 257,271 257 C271 257,263 251,263 245Z" fill="var(--accent)" opacity=".6"/>
-            <!-- corpo gato -->
             <ellipse cx="272" cy="210" rx="48" ry="38" fill="#FFFFFF" stroke="#E8E0D0" stroke-width="1.5"/>
-            <!-- patas -->
             <rect x="248" y="226" width="14" height="36" rx="7" fill="#E8E0D0"/>
             <rect x="278" y="230" width="14" height="32" rx="7" fill="#E8E0D0"/>
-            <!-- rabo gato -->
             <path d="M320 218 Q348 198 342 174 Q336 158 326 168" stroke="#E8E0D0" stroke-width="10" fill="none" stroke-linecap="round"/>
-            <!-- cabeça gato -->
             <ellipse cx="272" cy="168" rx="40" ry="38" fill="#FFFFFF" stroke="#E8E0D0" stroke-width="1.5"/>
             <polygon points="240,152 228,126 256,142" fill="#FFFFFF" stroke="#E8E0D0" stroke-width="1.5"/>
             <polygon points="304,152 316,126 288,142" fill="#FFFFFF" stroke="#E8E0D0" stroke-width="1.5"/>
             <polygon points="242,150 232,128 256,142" fill="#F9C5C5"/>
             <polygon points="302,150 312,128 288,142" fill="#F9C5C5"/>
-            <!-- olhos gato -->
-            <circle cx="261" cy="166" r="5" fill="#2D3748"/>
-            <circle cx="283" cy="166" r="5" fill="#2D3748"/>
+            <circle cx="261" cy="166" r="5"   fill="#2D3748"/>
+            <circle cx="283" cy="166" r="5"   fill="#2D3748"/>
             <circle cx="263" cy="164" r="1.5" fill="white"/>
             <circle cx="285" cy="164" r="1.5" fill="white"/>
             <ellipse cx="272" cy="178" rx="7" ry="4.5" fill="#F9C5C5"/>
-            <!-- manchas gato -->
-            <ellipse cx="256" cy="158" rx="11" ry="8" fill="rgba(0,0,0,.1)"/>
+            <!-- bigodes -->
+            <line x1="235" y1="175" x2="258" y2="177" stroke="#D0D0D0" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="235" y1="180" x2="258" y2="180" stroke="#D0D0D0" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="286" y1="177" x2="309" y2="175" stroke="#D0D0D0" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="286" y1="180" x2="309" y2="180" stroke="#D0D0D0" stroke-width="1.2" stroke-linecap="round"/>
+            <ellipse cx="256" cy="158" rx="11" ry="8"  fill="rgba(0,0,0,.1)"/>
             <ellipse cx="285" cy="204" rx="16" ry="12" fill="rgba(0,0,0,.06)"/>
-
-            <!-- Corações flutuantes -->
+            <!-- corações -->
             <path d="M48 120 C48 116,52 113,56 116 C60 113,64 116,64 120 C64 126,56 132,56 132 C56 132,48 126,48 120Z" fill="var(--accent)" opacity=".85"/>
             <path d="M320 80 C320 77,323 75,326 77 C329 75,332 77,332 80 C332 84,326 88,326 88 C326 88,320 84,320 80Z" fill="#F9C5C5" opacity=".8"/>
             <path d="M160 55 C160 52,163 50,166 52 C169 50,172 52,172 55 C172 59,166 63,166 63 C166 63,160 59,160 55Z" fill="#F9C5C5" opacity=".6"/>
             <path d="M20 200 C20 197,23 195,26 197 C29 195,32 197,32 200 C32 204,26 208,26 208 C26 208,20 204,20 200Z" fill="var(--accent)" opacity=".4"/>
-
-            <!-- Patas decorativas -->
+            <!-- patinhas -->
             <g opacity=".2" fill="var(--cream)">
-              <circle cx="340" cy="240" r="7"/><circle cx="354" cy="229" r="4.5"/><circle cx="354" cy="249" r="4.5"/><circle cx="348" cy="240" r="4.5" opacity=".6"/>
+              <circle cx="340" cy="240" r="7"/>
+              <circle cx="354" cy="229" r="4.5"/>
+              <circle cx="354" cy="249" r="4.5"/>
+              <circle cx="348" cy="240" r="4.5" opacity=".6"/>
             </g>
           </svg>
         </div>
 
         <div class="visual-stats">
-          <div class="v-stat"><strong></strong><span>Animais adotados</span></div>
-          <div class="v-stat"><strong></strong><span>ONGs parceiras</span></div>
+          <div class="v-stat"><strong>2.400+</strong><span>Animais adotados</span></div>
+          <div class="v-stat"><strong>180+</strong><span>ONGs parceiras</span></div>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT: formulário -->
+    <!-- PAINEL DIREITO: FORMULÁRIO -->
     <div class="login-form-panel">
       <div class="login-card">
 
         <div class="login-header">
           <div class="login-badge"><span></span> Área do usuário</div>
           <h1 class="login-title">Entrar na<br>sua conta</h1>
-          <p class="login-subtitle">Não tem conta? <a href="cadastro.html">Cadastre-se grátis</a></p>
+          <p class="login-subtitle">Não tem conta? <a href="cadastro.html">Cadastre-se grátis →</a></p>
         </div>
 
         <form id="login-form" novalidate>
@@ -487,11 +526,9 @@ login.html
               </svg>
               <input type="password" id="password" name="password" placeholder="Sua senha" autocomplete="current-password" />
               <button type="button" class="toggle-pw" id="toggle-pw" aria-label="Mostrar senha">
-                <!-- eye open -->
                 <svg id="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>
                 </svg>
-                <!-- eye closed (hidden by default) -->
                 <svg id="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
                   <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/>
                 </svg>
@@ -512,7 +549,9 @@ login.html
           <!-- Botão entrar -->
           <button type="submit" class="btn-login" id="btn-login">
             <div class="spinner" id="spinner"></div>
-            <svg id="btn-icon" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            <svg id="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="15" y1="12" x2="3" y2="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
             <span id="btn-text">Entrar</span>
           </button>
 
@@ -522,7 +561,6 @@ login.html
           <!-- Social -->
           <div class="social-logins">
             <a href="#" class="btn-social">
-              <!-- Google -->
               <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -532,7 +570,6 @@ login.html
               Google
             </a>
             <a href="#" class="btn-social">
-              <!-- Facebook -->
               <svg viewBox="0 0 24 24" fill="#1877F2" xmlns="http://www.w3.org/2000/svg">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
               </svg>
@@ -540,7 +577,6 @@ login.html
             </a>
           </div>
 
-          <!-- Link cadastro -->
           <p class="register-prompt">
             Ainda não tem uma conta? <a href="cadastro.html">Criar conta grátis →</a>
           </p>
@@ -562,7 +598,7 @@ login.html
       const show = pwInput.type === 'password';
       pwInput.type = show ? 'text' : 'password';
       eyeOpen.style.display   = show ? 'none' : '';
-      eyeClosed.style.display = show ? '' : 'none';
+      eyeClosed.style.display = show ? ''     : 'none';
     });
 
     /* ── Validação + submit ── */
@@ -578,49 +614,36 @@ login.html
       e.preventDefault();
       let valid = true;
 
-      const email = document.getElementById('email');
-      const pass  = document.getElementById('password');
+      const email  = document.getElementById('email');
+      const pass   = document.getElementById('password');
       const fEmail = document.getElementById('field-email');
       const fPass  = document.getElementById('field-password');
 
       fEmail.classList.remove('invalid');
       fPass.classList.remove('invalid');
 
-      if (!validateEmail(email.value.trim())) {
-        fEmail.classList.add('invalid');
-        valid = false;
-      }
-      if (pass.value.length < 6) {
-        fPass.classList.add('invalid');
-        valid = false;
-      }
+      if (!validateEmail(email.value.trim())) { fEmail.classList.add('invalid'); valid = false; }
+      if (pass.value.length < 6)              { fPass.classList.add('invalid');  valid = false; }
       if (!valid) return;
 
-      /* simula loading */
+      /* loading */
       btnLogin.disabled = true;
       spinner.style.display = 'block';
       btnIcon.style.display = 'none';
-      btnText.textContent = 'Entrando...';
+      btnText.textContent   = 'Entrando...';
 
-      await new Promise(r => setTimeout(r, 1800));
+      await new Promise(r => setTimeout(r, 1600));
 
-      /* simula sucesso – redirecionar */
-      btnText.textContent = '✓ Sucesso!';
+      /* sucesso */
+      spinner.style.display    = 'none';
+      btnText.textContent      = '✓ Sucesso!';
       btnLogin.style.background = '#22c55e';
-      spinner.style.display = 'none';
 
-      setTimeout(() => {
-        window.location.href = '../index.html';
-      }, 800);
+      setTimeout(() => { window.location.href = '../index.html'; }, 800);
     });
 
-    /* limpa erro ao digitar */
-    document.getElementById('email').addEventListener('input', () => {
-      document.getElementById('field-email').classList.remove('invalid');
-    });
-    document.getElementById('password').addEventListener('input', () => {
-      document.getElementById('field-password').classList.remove('invalid');
-    });
+    document.getElementById('email').addEventListener('input',    () => { document.getElementById('field-email').classList.remove('invalid'); });
+    document.getElementById('password').addEventListener('input', () => { document.getElementById('field-password').classList.remove('invalid'); });
   </script>
 </body>
 </html>
