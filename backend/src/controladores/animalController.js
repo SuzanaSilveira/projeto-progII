@@ -1,4 +1,6 @@
 const db = require('../database/database.js');
+const fs = require('fs');
+const path = require('path');
 
 const animalController = {
     // Cadastrar novo animal
@@ -199,15 +201,28 @@ const animalController = {
         }
     },
 
-    // Deletar animal
+    // 🆕 Deletar animal e sua foto associada
     deletar(req, res) {
         const { id } = req.params;
         
         try {
+            // Primeiro, buscar a imagem do animal
+            const animalStmt = db.prepare('SELECT imagem_url FROM animais WHERE id = ?');
+            const animal = animalStmt.get(id);
+            
+            // Deletar o animal do banco
             const stmt = db.prepare('DELETE FROM animais WHERE id = ?');
             const result = stmt.run(id);
             
             if (result.changes > 0) {
+                // Se tiver imagem, deletar o arquivo da pasta uploads
+                if (animal && animal.imagem_url) {
+                    const imagePath = path.join(__dirname, '..', '..', animal.imagem_url);
+                    if (fs.existsSync(imagePath)) {
+                        fs.unlinkSync(imagePath);
+                    }
+                }
+                
                 res.json({ success: true, message: 'Animal deletado com sucesso!' });
             } else {
                 res.status(404).json({ success: false, message: 'Animal não encontrado!' });
@@ -240,6 +255,24 @@ const animalController = {
                 message: 'Contato registrado!',
                 linkWhatsApp: linkWhatsApp
             });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    },
+
+    // 🆕 Buscar animais por administrador (para o admin ver seus animais)
+    buscarPorAdministrador(req, res) {
+        const { administrador_id } = req.params;
+        
+        try {
+            const stmt = db.prepare(`
+                SELECT * FROM animais 
+                WHERE administrador_id = ?
+                ORDER BY created_at DESC
+            `);
+            const animais = stmt.all(administrador_id);
+            
+            res.json({ success: true, animais });
         } catch (error) {
             res.status(500).json({ success: false, message: error.message });
         }
