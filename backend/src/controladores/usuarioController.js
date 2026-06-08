@@ -36,11 +36,13 @@ const usuarioController = {
             const usuario = stmt.get(email, senha);
             
             if (usuario) {
+                const token = Buffer.from(`${usuario.id}:${usuario.email}`).toString('base64');  
                 delete usuario.senha;
                 res.json({
                     success: true,
                     message: 'Login realizado com sucesso!',
-                    usuario: usuario
+                    token: token, 
+                    usuario: usuario,
                 });
             } else {
                 res.status(401).json({
