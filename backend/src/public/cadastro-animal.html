@@ -469,3 +469,55 @@
   </style>
 </head>
 <body>
+
+    <!-- ═══ HEADER ═══ -->
+  <header>
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M4.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM9 7.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM12 22c-4.97 0-9-2.69-9-6 0-1.94 1.24-3.67 3.19-4.84C7.14 10.42 9.48 9.75 12 9.75s4.86.67 5.81 1.41C19.76 12.33 21 14.06 21 16c0 3.31-4.03 6-9 6z"/></svg>
+      </div>
+      <span class="logo-text">Amigo Fiel</span>
+    </a>
+    <div class="header-right">
+      <span class="admin-badge">Painel Admin</span>
+      <a href="animais.html" class="nav-btn-ghost">Ver animais</a>
+      <a href="../index.html" class="nav-btn-ghost">Início</a>
+    </div>
+  </header>
+
+  <!-- ═══ PAGE ═══ -->
+  <div class="page-wrapper">
+
+    <!-- PAINEL ESQUERDO: PREVIEW AO VIVO -->
+    <div class="preview-panel">
+      <div class="deco-ring"></div>
+      <div class="deco-ring"></div>
+      <div class="deco-ring"></div>
+
+      <div class="preview-content">
+        <p class="preview-label">Pré-visualização do card</p>
+
+        <div class="animal-preview-card" id="preview-card">
+          <div class="preview-img-area" id="preview-img">
+            <!-- SVG injetado por JS -->
+            <span id="preview-img-placeholder" style="color:rgba(255,255,255,.3);font-size:.8rem;">Selecione um avatar →</span>
+          </div>
+          <span class="preview-badge-species" id="preview-species-badge" style="display:none"></span>
+
+          <div class="preview-body">
+            <div class="preview-name" id="preview-name" style="color:#C4C4C4;font-style:italic;font-size:1rem;">Nome do animal...</div>
+            <div class="preview-tags" id="preview-tags">
+              <span class="ptag" style="opacity:.4">Espécie</span>
+              <span class="ptag" style="opacity:.4">Porte</span>
+              <span class="ptag" style="opacity:.4">Idade</span>
+            </div>
+            <div class="preview-desc" id="preview-desc" style="color:#D1D5DB;font-style:italic;">Descrição aparece aqui...</div>
+            <button class="preview-btn">Ver detalhes</button>
+          </div>
+        </div>
+
+        <p class="preview-tip">
+          <strong>Dica:</strong> preencha o formulário ao lado e veja o card sendo montado em tempo real.
+        </p>
+      </div>
+    </div>
