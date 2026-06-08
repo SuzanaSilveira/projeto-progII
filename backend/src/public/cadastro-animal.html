@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastrar Animal — Amigo Fiel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════
+       RESET + VARIÁVEIS
+    ═══════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:       #1F5C2E;
+      --green-mid:   #2D7A3F;
+      --green-light: #E8F2E9;
+      --cream:       #F5F0E8;
+      --warm-white:  #FDFAF4;
+      --dark:        #1A1A1A;
+      --muted:       #6B7280;
+      --accent:      #F4A035;
+      --accent2:     #E86B3A;
+      --pink:        #F9C5C5;
+      --teal:        #A8D8C8;
+      --radius:      18px;
+    }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      min-height: 100vh;
+      background: var(--green);
+    }
+
+    /* ═══════════════════════════════
+       HEADER
+    ═══════════════════════════════ */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 5%;
+      background: rgba(20,60,30,0.78);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      animation: slideDown .55s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to   { transform: translateY(0);     opacity: 1; }
+    }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon {
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,.14);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .logo-icon svg { width: 20px; height: 20px; fill: #fff; }
+    .logo-text {
+      font-family: 'Fraunces', serif;
+      font-weight: 900; font-size: 1.25rem;
+      letter-spacing: -.02em; color: #fff;
+    }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .admin-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(244,160,53,.2);
+      border: 1px solid rgba(244,160,53,.35);
+      color: var(--accent);
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 50px;
+    }
+    .admin-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent); border-radius: 50%;
+      display: inline-block;
+    }
+    .nav-btn-ghost {
+      font-family: 'Sora', sans-serif;
+      font-size: .8rem; font-weight: 600;
+      padding: 8px 16px; border-radius: 50px;
+      background: rgba(255,255,255,.1);
+      color: #fff; border: 1px solid rgba(255,255,255,.2);
+      text-decoration: none; transition: background .2s; cursor: pointer;
+    }
+    .nav-btn-ghost:hover { background: rgba(255,255,255,.18); }
+
+    /* ═══════════════════════════════
+       LAYOUT
+    ═══════════════════════════════ */
+    .page-wrapper {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+    }
+
+    /* ── PAINEL ESQUERDO: PREVIEW ── */
+    .preview-panel {
+      background: var(--green);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 110px 6% 70px;
+      position: relative; overflow: hidden;
+    }
+    .preview-panel::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 65% 55% at 85% 88%, rgba(244,160,53,.22) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 45% at 10% 10%, rgba(255,255,255,.05) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .deco-ring {
+      position: absolute; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.06); pointer-events: none;
+    }
+    .deco-ring:nth-child(1) { width: 440px; height: 440px; top: -140px; right: -140px; }
+    .deco-ring:nth-child(2) { width: 230px; height: 230px; bottom: 20px; left: -75px; }
+    .deco-ring:nth-child(3) { width: 100px; height: 100px; top: 50%; left: 5%; border-color: rgba(244,160,53,.15); }
+
+    .preview-content { position: relative; z-index: 2; text-align: center; width: 100%; max-width: 360px; }
+
+    .preview-label {
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: rgba(255,255,255,.45);
+      margin-bottom: 1.2rem;
+    }
+
+    /* card de pré-visualização */
+    .animal-preview-card {
+      background: var(--warm-white);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.15);
+      transition: transform .3s cubic-bezier(.22,1,.36,1);
+    }
+    .animal-preview-card:hover { transform: translateY(-4px); }
+
+    .preview-img-area {
+      height: 200px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .preview-img-area svg {
+      width: 100%; height: 100%;
+    }
+    .preview-badge-status {
+      position: absolute; top: 12px; left: 12px;
+      background: #22c55e; color: #fff;
+      font-size: .68rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 50px;
+      letter-spacing: .05em;
+    }
+    .preview-badge-species {
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(255,255,255,.9);
+      font-size: .72rem; font-weight: 600;
+      padding: 4px 10px; border-radius: 50px;
+      color: var(--dark);
+    }
+
+    .preview-body { padding: 1.2rem 1.4rem 1.4rem; }
+    .preview-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--dark); margin-bottom: .4rem;
+      min-height: 1.7rem;
+    }
+    .preview-tags {
+      display: flex; gap: .4rem; flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .ptag {
+      background: var(--green-light); color: var(--green);
+      font-size: .72rem; font-weight: 600;
+      padding: 3px 10px; border-radius: 50px;
+    }
+    .preview-desc {
+      font-size: .8rem; color: var(--muted);
+      line-height: 1.55; margin-bottom: 1rem;
+      min-height: 2.4rem;
+    }
+    .preview-btn {
+      display: block; width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      background: var(--green); color: #fff;
+      font-family: 'Sora', sans-serif;
+      font-weight: 700; font-size: .85rem;
+      text-align: center; border: none; cursor: default;
+      opacity: .6;
+    }
+
+    /* dica embaixo do card */
+    .preview-tip {
+      margin-top: 1.4rem;
+      color: rgba(255,255,255,.4);
+      font-size: .78rem; line-height: 1.5;
+    }
+    .preview-tip strong { color: rgba(255,255,255,.65); }
+
+    /* ── PAINEL DIREITO: FORMULÁRIO ── */
+    .form-panel {
+      background: var(--green-mid);
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 110px 5% 60px;
+      position: relative; overflow: hidden;
+    }
+    .form-panel::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 8% 12%, rgba(255,255,255,.07) 0%, transparent 50%),
+        radial-gradient(ellipse 55% 55% at 92% 92%, rgba(0,0,0,.18) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .form-panel::after {
+      content: ''; position: absolute;
+      width: 320px; height: 320px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.06);
+      top: -100px; right: -100px; pointer-events: none;
+    }
+
+    
