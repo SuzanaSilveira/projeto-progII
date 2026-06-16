@@ -22,7 +22,7 @@ const authController = {
             if (!usuario) {
                 console.log(' Usuário não encontrado:', email);
                 return res.status(401).json({
-                    erro: "Usuário não encontrado!"
+                    erro: "Email ou senha incorretos!"
                 });
             }
             
@@ -30,7 +30,7 @@ const authController = {
             if (usuario.senha !== senha) {
                 console.log(' Senha incorreta para:', email);
                 return res.status(401).json({
-                    erro: "Senha incorreta!"
+                    erro: "Email ou senha incorretos!"
                 });
             }
             
