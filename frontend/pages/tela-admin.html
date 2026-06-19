@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Admin — Amigo Fiel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/tela-admin.css">
+  <script src="/js/tela-admin.css" defer></script>
+
+  <!-- Reutiliza os mesmos CSS do site -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/home.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     HEADER ADMIN
+═══════════════════════════════════════ -->
+<header>
+  <a href="tela-admin.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M4.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM9 7.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM12 22c-4.97 0-9-2.69-9-6 0-1.94 1.24-3.67 3.19-4.84C7.14 10.42 9.48 9.75 12 9.75s4.86.67 5.81 1.41C19.76 12.33 21 14.06 21 16c0 3.31-4.03 6-9 6z"/></svg>
+    </div>
+    <span class="logo-text">Amigo Fiel</span>
+  </a>
+
+  <nav class="admin-nav">
+    <a href="/pages/tela-admin.html" class="active">Início</a>
+    <a href="/pages/animais.html">Meus Animais</a>
+    <a href="/pages/cadastro-animal.html">Cadastrar Animal</a>
+  </nav>
+
+  <div class="header-right">
+    <span class="admin-badge">Admin</span>
+    <a href="/pages/cadastro-animal.html" class="btn-cadastrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Cadastrar Animal
+    </a>
+    <!-- avatar + dropdown -->
+    <div class="admin-avatar" tabindex="0">
+      <div class="avatar-circle" id="admin-initial">A</div>
+      <span class="avatar-name" id="admin-name-header">Admin</span>
+      <div class="avatar-dropdown">
+        <a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Meu perfil
+        </a>
+        <hr>
+        <a href="pages/login.html" class="logout">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sair
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+
+
+<!-- ═══════════════════════════════════════
+     HERO ADMIN
+═══════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-badge-admin">Painel de administração</div>
+    <h1>Olá, <em id="hero-admin-name">Admin</em>!<br>Gerencie os animais</h1>
+    <p class="hero-sub">Cadastre novos animais, gerencie os perfis existentes e acompanhe os interessados em adoção — tudo em um só lugar.</p>
+    <div class="hero-cta">
+      <a href="/pages/cadastro-animal.html" class="btn-hero-accent">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Cadastrar animal
+      </a>
+      <a href="#meus-animais" class="btn-hero-outline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Ver meus animais
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><strong id="stat-total">0</strong><span>Animais cadastrados</span></div>
+      <div class="stat"><strong id="stat-ativos">0</strong><span>Disponíveis</span></div>
+      <div class="stat"><strong>180+</strong><span>ONGs parceiras</span></div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <svg viewBox="0 0 540 480" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="270" cy="260" rx="220" ry="200" fill="rgba(255,255,255,.06)"/>
+      <ellipse cx="390" cy="160" rx="110" ry="100" fill="rgba(244,160,53,.1)"/>
+      <!-- cachorro -->
+      <ellipse cx="190" cy="310" rx="90" ry="65" fill="#E8C87A"/>
+      <rect x="140" y="340" width="26" height="60" rx="13" fill="#D4A852"/>
+      <rect x="175" y="345" width="26" height="60" rx="13" fill="#D4A852"/>
+      <rect x="210" y="345" width="26" height="58" rx="13" fill="#D4A852"/>
+      <rect x="243" y="340" width="26" height="55" rx="13" fill="#D4A852"/>
+      <ellipse cx="110" cy="265" rx="52" ry="46" fill="#E8C87A"/>
+      <ellipse cx="93" cy="248" rx="18" ry="22" fill="#D4A852"/>
+      <ellipse cx="127" cy="248" rx="18" ry="22" fill="#D4A852"/>
+      <ellipse cx="110" cy="280" rx="24" ry="16" fill="#D4A852"/>
+      <circle cx="100" cy="265" r="5" fill="#1A1A1A"/>
+      <circle cx="120" cy="265" r="5" fill="#1A1A1A"/>
+      <circle cx="101.5" cy="263.5" r="1.8" fill="white"/>
+      <circle cx="121.5" cy="263.5" r="1.8" fill="white"/>
+      <ellipse cx="110" cy="290" rx="10" ry="6" fill="#C47A5A"/>
+      <path d="M280 300 Q320 260 340 290" stroke="#E8C87A" stroke-width="18" fill="none" stroke-linecap="round"/>
+      <!-- gato -->
+      <ellipse cx="380" cy="330" rx="55" ry="48" fill="#FFFFFF" stroke="#E8E0D0" stroke-width="2"/>
+      <rect x="355" y="340" width="18" height="50" rx="9" fill="#E8E0D0"/>
+      <rect x="387" y="340" width="18" height="50" rx="9" fill="#E8E0D0"/>
+      <path d="M435 350 Q470 320 460 290 Q450 270 440 285" stroke="#E8E0D0" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <ellipse cx="380" cy="268" rx="42" ry="40" fill="#FFFFFF" stroke="#E8E0D0" stroke-width="2"/>
+      <polygon points="348,248 338,220 362,238" fill="#FFFFFF" stroke="#E8E0D0" stroke-width="2"/>
+      <polygon points="412,248 422,220 398,238" fill="#FFFFFF" stroke="#E8E0D0" stroke-width="2"/>
+      <polygon points="350,246 342,224 362,238" fill="#F9C5C5"/>
+      <polygon points="410,246 418,224 398,238" fill="#F9C5C5"/>
+      <circle cx="370" cy="265" r="5" fill="#2D3748"/>
+      <circle cx="390" cy="265" r="5" fill="#2D3748"/>
+      <circle cx="373" cy="263" r="1.5" fill="white"/>
+      <circle cx="393" cy="263" r="1.5" fill="white"/>
+      <ellipse cx="380" cy="278" rx="6" ry="4" fill="#F9C5C5"/>
+      <ellipse cx="360" cy="258" rx="14" ry="10" fill="#1A1A1A" opacity=".15"/>
+      <ellipse cx="395" cy="320" rx="18" ry="22" fill="#E8E0D0"/>
+      <!-- filhote -->
+      <ellipse cx="305" cy="370" rx="42" ry="32" fill="#C8A882"/>
+      <rect x="285" y="380" width="14" height="34" rx="7" fill="#B8946C"/>
+      <rect x="304" y="382" width="14" height="34" rx="7" fill="#B8946C"/>
+      <rect x="323" y="382" width="14" height="32" rx="7" fill="#B8946C"/>
+      <ellipse cx="280" cy="348" rx="28" ry="25" fill="#C8A882"/>
+      <ellipse cx="268" cy="338" rx="11" ry="14" fill="#B8946C"/>
+      <ellipse cx="291" cy="338" rx="11" ry="14" fill="#B8946C"/>
+      <circle cx="275" cy="348" r="3.5" fill="#1A1A1A"/>
+      <circle cx="287" cy="348" r="3.5" fill="#1A1A1A"/>
+      <ellipse cx="281" cy="362" rx="7" ry="5" fill="#C47A5A"/>
+      <!-- decorativos -->
+      <g opacity=".18" fill="var(--cream)">
+        <circle cx="450" cy="80" r="8"/><circle cx="465" cy="68" r="5"/>
+        <circle cx="475" cy="78" r="5"/><circle cx="468" cy="90" r="5"/>
+      </g>
+      <path d="M470 200 C470 196,474 193,478 196 C482 193,486 196,486 200 C486 206,478 212,478 212 C478 212,470 206,470 200Z" fill="var(--accent)" opacity=".8"/>
+      <path d="M60 180 C60 176,64 173,68 176 C72 173,76 176,76 180 C76 186,68 192,68 192 C68 192,60 186,60 180Z" fill="#F9C5C5" opacity=".7"/>
+    </svg>
+  </div>
+</section>
+
+<!-- wave -->
+<div class="wave">
+  <svg viewBox="0 0 1440 60" preserveAspectRatio="none" fill="#F5F0E8" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,0 C360,60 1080,60 1440,0 L1440,60 L0,60 Z"/>
+  </svg>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     AÇÕES RÁPIDAS
+═══════════════════════════════════════ -->
+<div class="quick-actions reveal">
+  <div class="quick-grid">
+    <a href="/pages/cadastro-animal.html" class="quick-card">
+      <div class="quick-icon green">🐾</div>
+      <div class="quick-text">
+        <h4>Cadastrar Animal</h4>
+        <p>Publique um novo animal disponível para adoção na plataforma.</p>
+      </div>
+    </a>
+    <a href="pages/animais.html" class="quick-card">
+      <div class="quick-icon teal">📋</div>
+      <div class="quick-text">
+        <h4>Ver todos os animais</h4>
+        <p>Acesse a listagem completa de animais cadastrados no sistema.</p>
+      </div>
+    </a>
+    <a href="#" class="quick-card">
+      <div class="quick-icon orange">📩</div>
+      <div class="quick-text">
+        <h4>Interesses recebidos</h4>
+        <p>Veja quem demonstrou interesse em adotar os animais cadastrados.</p>
+      </div>
+    </a>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     MEUS ANIMAIS
+═══════════════════════════════════════ -->
+<section id="meus-animais" class="my-animals-section">
+  <div class="section-header-row reveal">
+    <div>
+      <span class="section-label">Gerenciamento</span>
+      <h2 class="section-title">Meus animais</h2>
+      <p class="section-sub">Animais que você cadastrou na plataforma. Edite ou remova quando necessário.</p>
+    </div>
+    <a href="/pages/cadastro-animal.html" class="btn-new-animal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Novo animal
+    </a>
+  </div>
+
+  <!-- Grid preenchido via JS (simulando dados do banco) -->
+  <div class="animals-grid" id="admin-animals-grid">
+    <!-- cards injetados pelo JS -->
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="tela-admin.html" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24"><path d="M4.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM9 7.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM12 22c-4.97 0-9-2.69-9-6 0-1.94 1.24-3.67 3.19-4.84C7.14 10.42 9.48 9.75 12 9.75s4.86.67 5.81 1.41C19.76 12.33 21 14.06 21 16c0 3.31-4.03 6-9 6z"/></svg>
+        </div>
+        <span class="logo-text">Amigo Fiel</span>
+      </a>
+      <p>Área administrativa — gerencie os animais e conecte-os a famílias que têm amor para dar.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Admin</h5>
+      <a href="/pages/cadastro-animal.html">Cadastrar animal</a>
+      <a href="pages/animais.html">Listar animais</a>
+      <a href="#">Interesses</a>
+    </div>
+    <div class="footer-col">
+      <h5>Plataforma</h5>
+      <a href="index.html">Ver site público</a>
+      <a href="#">Usuários</a>
+      <a href="#">Configurações</a>
+    </div>
+    <div class="footer-col">
+      <h5>Suporte</h5>
+      <a href="mailto:contato@amigofiel.com.br">contato@amigofiel.com.br</a>
+      <a href="#">Joinville, SC</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Amigo Fiel — Painel Administrativo</span>
+    <div style="display:flex;gap:1.5rem;">
+      <a href="index.html">Site público</a>
+      <a href="pages/login.html">Sair</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
