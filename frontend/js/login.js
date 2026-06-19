@@ -85,7 +85,7 @@ form.addEventListener('submit', async (e) => {
       if (data.usuario.tipo === 'admin') {
         window.location.href = 'dashboard-admin.html';
       } else {
-        window.location.href = '../index.html';
+        window.location.href = '../pages/index.html';
       }
     }, 1000);
 
