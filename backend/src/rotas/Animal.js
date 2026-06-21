@@ -73,6 +73,23 @@ router.get('/buscar/por-porte/:porte', animalController.buscarPorPorte);
  *       200:
  *         description: Animal encontrado
  */
+/**
+ * @swagger
+ * /api/animais/admin/{administrador_id}:
+ *   get:
+ *     summary: Lista os animais cadastrados por um administrador
+ *     parameters:
+ *       - in: path
+ *         name: administrador_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Lista de animais do administrador
+ */
+router.get('/admin/:administrador_id', animalController.buscarPorAdministrador);
+router.get('/buscar/por-porte/:porte', animalController.buscarPorPorte);
 router.get('/:id', animalController.buscarPorId);
 
 /**

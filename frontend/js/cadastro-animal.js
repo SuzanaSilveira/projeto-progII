@@ -1,123 +1,132 @@
-const AVATARS = {
-  cachorro1: {
-    bg: '#A8D8C8',
-    label: '🐶 Cachorro',
-    svg: `
-        <svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg">
-          <rect width="300" height="210" fill="#A8D8C8"/>
-          <ellipse cx="150" cy="145" rx="80" ry="55" fill="#E8C87A"/>
-          <rect x="108" y="168" width="20" height="40" rx="10" fill="#D4A852"/>
-          <rect x="138" y="172" width="20" height="38" rx="10" fill="#D4A852"/>
-          <rect x="168" y="172" width="20" height="36" rx="10" fill="#D4A852"/>
-          <rect x="196" y="168" width="20" height="38" rx="10" fill="#D4A852"/>
-          <ellipse cx="108" cy="110" rx="44" ry="40" fill="#E8C87A"/>
-          <ellipse cx="93" cy="97" rx="15" ry="19" fill="#D4A852"/>
-          <ellipse cx="122" cy="97" rx="15" ry="19" fill="#D4A852"/>
-          <ellipse cx="107" cy="123" rx="20" ry="13" fill="#D4A852"/>
-          <circle cx="99" cy="110" r="4" fill="#1A1A1A"/>
-          <circle cx="116" cy="110" r="4" fill="#1A1A1A"/>
-          <circle cx="100.5" cy="108.5" r="1.4" fill="white"/>
-          <circle cx="117.5" cy="108.5" r="1.4" fill="white"/>
-          <ellipse cx="107" cy="130" rx="9" ry="6" fill="#C47A5A"/>
-          <path d="M230 135 Q255 105 240 80" stroke="#E8C87A" stroke-width="14" fill="none" stroke-linecap="round"/>
-        </svg>`
-  },
-  cachorro2: {
-    bg: '#D4E8F0',
-    label: '🐶 Cachorro',
-    svg: `
-        <svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg">
-          <rect width="300" height="210" fill="#D4E8F0"/>
-          <ellipse cx="155" cy="140" rx="95" ry="58" fill="#C8A882"/>
-          <rect x="104" y="163" width="22" height="45" rx="11" fill="#B8946C"/>
-          <rect x="136" y="168" width="22" height="42" rx="11" fill="#B8946C"/>
-          <rect x="170" y="168" width="22" height="42" rx="11" fill="#B8946C"/>
-          <rect x="202" y="163" width="22" height="45" rx="11" fill="#B8946C"/>
-          <ellipse cx="100" cy="98" rx="50" ry="45" fill="#C8A882"/>
-          <ellipse cx="83" cy="84" rx="17" ry="22" fill="#B8946C"/>
-          <ellipse cx="117" cy="84" rx="17" ry="22" fill="#B8946C"/>
-          <ellipse cx="100" cy="115" rx="22" ry="14" fill="#B8946C"/>
-          <circle cx="91" cy="100" r="5" fill="#1A1A1A"/>
-          <circle cx="110" cy="100" r="5" fill="#1A1A1A"/>
-          <ellipse cx="185" cy="128" rx="25" ry="18" fill="rgba(0,0,0,.12)"/>
-          <path d="M250 120 Q270 95 255 72" stroke="#C8A882" stroke-width="16" fill="none" stroke-linecap="round"/>
-        </svg>`
-  },
-  gato1: {
-    bg: '#E8E8F8',
-    label: '🐱 Gato',
-    svg: `
-        <svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg">
-          <rect width="300" height="210" fill="#E8E8F8"/>
-          <ellipse cx="150" cy="150" rx="72" ry="52" fill="#888"/>
-          <rect x="118" y="168" width="18" height="38" rx="9" fill="#777"/>
-          <rect x="148" y="172" width="18" height="36" rx="9" fill="#777"/>
-          <rect x="178" y="172" width="18" height="35" rx="9" fill="#777"/>
-          <path d="M222 155 Q255 130 248 105 Q242 88 232 98" stroke="#777" stroke-width="14" fill="none" stroke-linecap="round"/>
-          <ellipse cx="145" cy="100" rx="48" ry="44" fill="#888"/>
-          <polygon points="112,82 100,54 128,72" fill="#888"/>
-          <polygon points="178,82 190,54 162,72" fill="#888"/>
-          <polygon points="114,80 104,58 128,72" fill="#F9C5C5"/>
-          <polygon points="176,80 186,58 162,72" fill="#F9C5C5"/>
-          <circle cx="135" cy="100" r="5" fill="#1A1A1A"/>
-          <circle cx="155" cy="100" r="5" fill="#1A1A1A"/>
-          <circle cx="137" cy="98" r="1.5" fill="white"/>
-          <circle cx="157" cy="98" r="1.5" fill="white"/>
-          <ellipse cx="145" cy="114" rx="8" ry="5" fill="#F9C5C5"/>
-          <ellipse cx="128" cy="92" rx="12" ry="9" fill="rgba(0,0,0,.18)"/>
-          <ellipse cx="145" cy="148" rx="30" ry="20" fill="rgba(255,255,255,.15)"/>
-        </svg>`
-  },
-  gato2: {
-    bg: '#F0E8F8',
-    label: '🐱 Gato',
-    svg: `
-        <svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg">
-          <rect width="300" height="210" fill="#F0E8F8"/>
-          <ellipse cx="150" cy="148" rx="68" ry="50" fill="#F4A035"/>
-          <rect x="120" y="165" width="18" height="40" rx="9" fill="#E8943A"/>
-          <rect x="150" y="170" width="18" height="37" rx="9" fill="#E8943A"/>
-          <rect x="178" y="170" width="18" height="37" rx="9" fill="#E8943A"/>
-          <path d="M218 150 Q248 125 240 100 Q234 85 225 95" stroke="#F4A035" stroke-width="13" fill="none" stroke-linecap="round"/>
-          <ellipse cx="148" cy="100" rx="46" ry="42" fill="#F4A035"/>
-          <polygon points="115,82 103,55 130,72" fill="#F4A035"/>
-          <polygon points="180,82 192,55 165,72" fill="#F4A035"/>
-          <polygon points="117,80 107,58 130,72" fill="#F9C5C5"/>
-          <polygon points="178,80 188,58 165,72" fill="#F9C5C5"/>
-          <circle cx="137" cy="98" r="5" fill="#2D3748"/>
-          <circle cx="158" cy="98" r="5" fill="#2D3748"/>
-          <circle cx="139" cy="96" r="1.5" fill="white"/>
-          <circle cx="160" cy="96" r="1.5" fill="white"/>
-          <ellipse cx="147" cy="112" rx="8" ry="5" fill="#E86B3A"/>
-          <path d="M130 78 L132 65" stroke="#E8943A" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M148 76 L148 63" stroke="#E8943A" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M165 78 L163 65" stroke="#E8943A" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>`
+
+/* ════════════════════════════════════════════
+   ESTADO DO ARQUIVO SELECIONADO
+════════════════════════════════════════════ */
+let arquivoSelecionado = null;
+
+const $ = id => document.getElementById(id);
+
+const uploadZone = $('upload-zone');
+const fotoInput = $('foto');
+const uploadPreview = $('upload-preview');
+const previewThumb = $('upload-preview-thumb');
+const previewName = $('upload-preview-name');
+const previewSize = $('upload-preview-size');
+const removeBtn = $('upload-preview-remove');
+
+const previewImgArea = $('preview-img-area');
+const previewImgTag = $('preview-img-tag');
+const previewPlaceholder = $('preview-img-placeholder');
+const speciesBadgeEl = $('preview-species-badge');
+
+/* ── Formata tamanho do arquivo ── */
+function formatBytes(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+/* ── Processa o arquivo selecionado (input ou drag&drop) ── */
+function handleFile(file) {
+  if (!file) return;
+
+  // valida tipo
+  const tiposPermitidos = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+  if (!tiposPermitidos.includes(file.type)) {
+    alert('Formato não suportado. Envie uma imagem PNG, JPG ou WEBP.');
+    return;
   }
-};
 
-/* ════════════════════
-   PREVIEW AO VIVO
-════════════════════ */
-const previewImg = document.getElementById('preview-img');
-const previewName = document.getElementById('preview-name');
-const previewTags = document.getElementById('preview-tags');
-const previewDesc = document.getElementById('preview-desc');
-const speciesBadge = document.querySelector('.preview-badge-species');
+  // valida tamanho (5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    alert('A imagem deve ter no máximo 5MB.');
+    return;
+  }
 
-function updatePreview() { // função que vai atualizar os cards
-  const nome = document.getElementById('nome').value.trim(); // o usuario digita e o valor é armazenado
-  const especie = document.getElementById('especie').value;
-  const porte = document.getElementById('porte').value;
-  const idade = document.getElementById('idade').value.trim();
-  const descricao = document.getElementById('descricao').value.trim();
-  const avatar = document.querySelector('input[name="imagem"]:checked');
+  arquivoSelecionado = file;
+  clearErr('field-foto');
+
+  // lê o arquivo para gerar preview local (FileReader)
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const dataUrl = e.target.result;
+
+    // preview dentro do mini-card de upload
+    previewThumb.src = dataUrl;
+    previewName.textContent = file.name;
+    previewSize.textContent = formatBytes(file.size);
+    uploadPreview.classList.add('show');
+    uploadZone.style.display = 'none';
+
+    // preview dentro do card grande (lado esquerdo)
+    previewImgTag.src = dataUrl;
+    previewImgTag.style.display = 'block';
+    previewPlaceholder.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+
+  updatePreview();
+}
+
+/* clique no input padrão */
+fotoInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  handleFile(file);
+});
+
+/* drag and drop */
+['dragenter', 'dragover'].forEach(evt => {
+  uploadZone.addEventListener(evt, (e) => {
+    e.preventDefault(); e.stopPropagation();
+    uploadZone.classList.add('dragover');
+  });
+});
+['dragleave', 'drop'].forEach(evt => {
+  uploadZone.addEventListener(evt, (e) => {
+    e.preventDefault(); e.stopPropagation();
+    uploadZone.classList.remove('dragover');
+  });
+});
+uploadZone.addEventListener('drop', (e) => {
+  const file = e.dataTransfer.files[0];
+  if (file) {
+    // sincroniza com o input para o submit funcionar normalmente
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    fotoInput.files = dt.files;
+    handleFile(file);
+  }
+});
+
+/* remover arquivo selecionado */
+removeBtn.addEventListener('click', () => {
+  arquivoSelecionado = null;
+  fotoInput.value = '';
+  uploadPreview.classList.remove('show');
+  uploadZone.style.display = 'block';
+
+  previewImgTag.src = '';
+  previewImgTag.style.display = 'none';
+  previewPlaceholder.style.display = 'flex';
+
+  updatePreview();
+});
+
+/* ════════════════════════════════════════════
+   PREVIEW AO VIVO (card da esquerda)
+════════════════════════════════════════════ */
+function updatePreview() {
+  const nome = $('nome').value.trim();
+  const especie = $('especie').value;
+  const porte = $('porte').value;
+  const idade = $('idade').value.trim();
+  const descricao = $('descricao').value.trim();
 
   // Nome
-  previewName.textContent = nome || 'Nome do animal...';
-  previewName.style.cssText = nome
-    ? 'color:var(--dark);font-style:normal;font-size:1.35rem' // preenchido
-    : 'color:#C4C4C4;font-style:italic;font-size:1rem'; // vazio 
+  $('preview-name').textContent = nome || 'Nome do animal...';
+  $('preview-name').style.cssText = nome
+    ? 'color:var(--dark);font-style:normal;font-size:1.35rem'
+    : 'color:#C4C4C4;font-style:italic;font-size:1rem';
 
   // Tags
   const tags = [];
@@ -125,6 +134,7 @@ function updatePreview() { // função que vai atualizar os cards
   if (porte) tags.push(porte + ' porte');
   if (idade) tags.push(idade);
 
+  const previewTags = $('preview-tags');
   if (tags.length) {
     previewTags.innerHTML = tags.map(t => `<span class="ptag">${t}</span>`).join('');
   } else {
@@ -135,95 +145,184 @@ function updatePreview() { // função que vai atualizar os cards
   }
 
   // Descrição
+  const previewDesc = $('preview-desc');
   previewDesc.textContent = descricao || 'Descrição aparece aqui...';
   previewDesc.style.cssText = descricao
     ? 'color:var(--muted);font-style:normal'
     : 'color:#D1D5DB;font-style:italic';
 
-  // Avatar
-  const speciesBadgeEl = document.getElementById('preview-species-badge');
-  if (avatar) { // verifica se algum foi selecionado
-    const data = AVATARS[avatar.value];
-    previewImg.innerHTML = data.svg;
-    speciesBadgeEl.textContent = data.label;
-    speciesBadgeEl.style.display = '';
+  // Badge de espécie sobre a foto
+  if (especie) {
+    speciesBadgeEl.textContent = especie === 'cachorro' ? '🐶 Cachorro' : '🐱 Gato';
+    speciesBadgeEl.style.display = 'block';
   } else {
-    previewImg.innerHTML = `<span style="color:rgba(31,92,46,.35);font-size:.8rem;font-family:Sora,sans-serif;">Selecione um avatar →</span>`;
     speciesBadgeEl.style.display = 'none';
   }
 }
 
-// Ouvintes // aparecer simultaneamente
+// Ouvintes nos campos de texto
 ['nome', 'especie', 'porte', 'idade', 'descricao'].forEach(id => {
-  document.getElementById(id).addEventListener('input', updatePreview);
-  document.getElementById(id).addEventListener('change', updatePreview);
-});
-document.querySelectorAll('input[name="imagem"]').forEach(r => {
-  r.addEventListener('change', updatePreview);
+  $(id).addEventListener('input', updatePreview);
+  $(id).addEventListener('change', updatePreview);
 });
 
-/* ════════════════════
-   VALIDAÇÃO + SUBMIT
-════════════════════ */
-function setErr(id) {
-  document.getElementById(id).classList.add('has-error');
-}
-function clearErr(id) {
-  document.getElementById(id).classList.remove('has-error');
-}
+/* ════════════════════════════════════════════
+   VALIDAÇÃO
+════════════════════════════════════════════ */
+function setErr(id) { $(id).classList.add('has-error'); }
+function clearErr(id) { $(id).classList.remove('has-error'); }
 
-// Limpa erro ao interagir
 ['nome', 'especie', 'porte', 'idade', 'descricao'].forEach(id => {
-  const el = document.getElementById(id);
-  el.addEventListener('input', () => clearErr('field-' + id));
-  el.addEventListener('change', () => clearErr('field-' + id));
-});
-document.querySelectorAll('input[name="imagem"]').forEach(r => {
-  r.addEventListener('change', () => clearErr('field-avatar'));
+  $(id).addEventListener('input', () => clearErr('field-' + id));
+  $(id).addEventListener('change', () => clearErr('field-' + id));
 });
 
-document.getElementById('animal-form').addEventListener('submit', async (e) => {
+/* ════════════════════════════════════════════
+   SUBMIT — UPLOAD + CADASTRO (2 ETAPAS)
+════════════════════════════════════════════ */
+$('animal-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   let valid = true;
 
-  const nome = document.getElementById('nome').value.trim();
-  const especie = document.getElementById('especie').value;
-  const porte = document.getElementById('porte').value;
-  const idade = document.getElementById('idade').value.trim();
-  const descricao = document.getElementById('descricao').value.trim();
-  const avatar = document.querySelector('input[name="imagem"]:checked');
+  const nome = $('nome').value.trim();
+  const especie = $('especie').value;
+  const porte = $('porte').value;
+  const idade = $('idade').value.trim();
+  const descricao = $('descricao').value.trim();
 
-  // verificação
   if (!nome) { setErr('field-nome'); valid = false; }
   if (!especie) { setErr('field-especie'); valid = false; }
   if (!porte) { setErr('field-porte'); valid = false; }
   if (!idade) { setErr('field-idade'); valid = false; }
   if (!descricao) { setErr('field-descricao'); valid = false; }
-  if (!avatar) { setErr('field-avatar'); valid = false; }
+  if (!arquivoSelecionado) { setErr('field-foto'); valid = false; }
 
   if (!valid) return;
 
-  // Loading
-  const btn = document.getElementById('btn-submit');
+  const btn = $('btn-submit');
   btn.disabled = true;
-  document.getElementById('spinner').style.display = 'block';
-  document.getElementById('btn-icon').style.display = 'none';
-  document.getElementById('btn-text').textContent = 'Publicando...';
+  $('spinner').style.display = 'block';
+  $('btn-icon').style.display = 'none';
 
-  await new Promise(r => setTimeout(r, 1500));
+  const progressWrap = $('upload-progress-wrap');
+  const progressFill = $('upload-progress-fill');
+  const progressPct = $('upload-progress-percent');
+  const progressText = $('upload-progress-text');
 
-  // Sucesso
-  document.getElementById('spinner').style.display = 'none';
-  document.getElementById('btn-text').textContent = '✓ Publicado!';
-  btn.style.background = '#22c55e';
+  try {
+    /* ════════════════════════════════════════
+       ETAPA 1 — UPLOAD DA IMAGEM
+       POST /api/upload  →  { url: "/uploads/xxxx.jpg" }
+    ════════════════════════════════════════ */
+    $('btn-text').textContent = 'Enviando imagem...';
+    progressWrap.classList.add('show');
+    progressText.textContent = 'Enviando imagem...';
 
-  const toast = document.getElementById('toast');
-  document.getElementById('toast-animal-name').textContent =
-    `"${nome}" foi publicado na plataforma 🐾`;
-  toast.classList.add('show');
+    const formData = new FormData();
+    formData.append('imagem', arquivoSelecionado);
 
-  setTimeout(() => {
-    // Redirecionar para a lista de animais após sucesso
-    window.location.href = 'animais.html';
-  }, 2500);
+    // ── Upload real com progresso (XMLHttpRequest, pois fetch não expõe progress nativo) ──
+    const urlRecebida = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/api/upload');
+
+      xhr.upload.onprogress = (ev) => {
+        if (ev.lengthComputable) {
+          const pct = Math.round((ev.loaded / ev.total) * 100);
+          progressFill.style.width = pct + '%';
+          progressPct.textContent = pct + '%';
+        }
+      };
+
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const data = JSON.parse(xhr.responseText);
+
+            if (!data.success) {
+              reject(new Error('Falha ao enviar a imagem.'));
+              return;
+            }
+
+            resolve(data.imagem_url);
+
+          } catch (err) {
+            reject(new Error('Resposta inválida do servidor de upload.'));
+          }
+
+        } else {
+          reject(new Error('Falha ao enviar a imagem.'));
+        }
+      };
+
+      xhr.onerror = () => reject(new Error('Erro de conexão ao enviar a imagem.'));
+      xhr.send(formData);
+    });
+
+    /* ════════════════════════════════════════
+       ETAPA 2 — CADASTRO DO ANIMAL
+       POST /api/animais
+    ════════════════════════════════════════ */
+    $('btn-text').textContent = 'Publicando...';
+    progressText.textContent = 'Salvando cadastro...';
+    progressFill.style.width = '100%';
+    progressPct.textContent = '100%';
+
+    // administrador_id deve vir da sessão/token do admin logado
+    const administrador_id = getAdminId();
+
+    const res = await fetch('/api/animais', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nome,
+        especie,
+        idade,
+        porte,
+        descricao,
+        imagem_url: urlRecebida,
+        administrador_id
+      })
+    });
+
+    if (!res.ok) {
+      throw new Error('Falha ao cadastrar o animal.');
+    }
+
+    /* ── SUCESSO ── */
+    $('spinner').style.display = 'none';
+    $('btn-text').textContent = '✓ Publicado!';
+    btn.style.background = '#22c55e';
+
+    showToast('success', 'Animal cadastrado com sucesso!', `"${nome}" foi publicado na plataforma 🐾`);
+
+    setTimeout(() => { window.location.href = 'animais.html'; }, 2200);
+
+  } catch (err) {
+    /* ── ERRO ── */
+    console.error(err);
+    progressWrap.classList.remove('show');
+    btn.disabled = false;
+    $('spinner').style.display = 'none';
+    $('btn-icon').style.display = '';
+    $('btn-text').textContent = 'Publicar animal';
+
+    showToast('error', 'Algo deu errado', err.message || 'Não foi possível concluir o cadastro. Tente novamente.');
+  }
 });
+
+/* ── ID do admin logado (placeholder até integrar sessão real) ── */
+function getAdminId() {
+  // return sessionStorage.getItem('adminId');
+  return 1;
+}
+
+/* ── Toast ── */
+function showToast(type, title, text) {
+  const toast = $('toast');
+  toast.classList.toggle('error', type === 'error');
+  $('toast-title').textContent = title;
+  $('toast-animal-name').textContent = text;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4000);
+}

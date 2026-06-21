@@ -11,12 +11,7 @@ const AVATARS_SVG = {
 };
 
 /* Dados fictícios — virão do banco via backend */
-const ANIMALS = [
-  { id: 1, nome: 'Bolinha', especie: 'cachorro', porte: 'Pequeno', idade: '2 anos', imagem: 'cachorro1', ativo: true },
-  { id: 2, nome: 'Luna', especie: 'gato', porte: 'Médio', idade: '1 ano', imagem: 'gato1', ativo: true },
-  { id: 3, nome: 'Thor', especie: 'cachorro', porte: 'Grande', idade: '3 anos', imagem: 'cachorro2', ativo: true },
-  { id: 4, nome: 'Mel', especie: 'gato', porte: 'Pequeno', idade: '4 meses', imagem: 'gato2', ativo: false },
-];
+let ANIMALS = [];
 
 /* ════════════════════════════════════════════
    INICIALIZAÇÃO
@@ -34,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('stat-ativos').textContent = ANIMALS.filter(a => a.ativo).length;
 
   /* Renderiza cards */
-  renderCards();
+  await carregarAnimais();
 
   /* Scroll reveal */
   const obs = new IntersectionObserver((entries) => {
@@ -57,14 +52,17 @@ function renderCards() {
 
   ANIMALS.forEach(animal => {
     const av = AVATARS_SVG[animal.imagem];
-    const statusClass = animal.ativo ? 'ativo' : 'inativo';
-    const statusLabel = animal.ativo ? '✓ Ativo' : '● Inativo';
+    const statusClass = ativo ? "ativo" : "inativo";
+    const statusLabel = ativo ? "✓ Disponível" : "Adotado";
 
     const card = document.createElement('article');
     card.className = 'animal-card reveal';
     card.innerHTML = `
       <div class="card-img-wrap">
-        ${av.svg}
+        <img
+        src="${animal.imagem_url}"
+        alt="${animal.nome}"
+        class="card-image">
         <span class="card-status ${statusClass}">${statusLabel}</span>
         <span class="card-species">${av.label}</span>
       </div>
@@ -72,7 +70,7 @@ function renderCards() {
         <div class="card-name">${animal.nome}</div>
         <div class="card-meta">
           <span class="tag">${animal.porte} porte</span>
-          <span class="tag">${animal.idade}</span>
+          <span class="tag">${animal.idade} ano${animal.idade > 1 ? 's' : ''}</span>
         </div>
         <div class="card-actions">
           <a href="pages/cadastro-animal.html" class="card-btn-edit">
@@ -130,3 +128,11 @@ function confirmDelete(id, nome) {
   document.getElementById('stat-ativos').textContent = ANIMALS.filter(a => a.ativo).length;
   renderCards();
 }
+
+const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+const resposta = await fetch(`/api/animais/admin/${usuario.id}`);
+const dados = await resposta.json();
+
+ANIMALS = dados.animais;
+renderCards();

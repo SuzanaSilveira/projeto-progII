@@ -6,22 +6,23 @@ const uploadController = {
     uploadImagem(req, res) {
         if (!req.file) {
             return res.status(400).json({
+                success: false,
                 erro: "Nenhuma imagem enviada"
             });
         }
 
-        // Retornar a URL completa da imagem
+        // Caminho relativo da imagem
         const imagemUrl = `/uploads/${req.file.filename}`;
 
         return res.status(200).json({
+            success: true,
             mensagem: "Imagem enviada com sucesso",
             arquivo: req.file.filename,
-            caminho: imagemUrl,
-            url: `http://localhost:3000${imagemUrl}`
+            imagem_url: imagemUrl
         });
     },
 
-    // Deletar imagem (opcional)
+    // Deletar imagem
     deletarImagem(req, res) {
         const { filename } = req.params;
         const filePath = path.join(__dirname, '../../uploads', filename);
@@ -29,16 +30,21 @@ const uploadController = {
         try {
             if (fs.existsSync(filePath)) {
                 fs.unlinkSync(filePath);
+
                 return res.status(200).json({
+                    success: true,
                     mensagem: "Imagem deletada com sucesso"
                 });
-            } else {
-                return res.status(404).json({
-                    erro: "Imagem não encontrada"
-                });
             }
+
+            return res.status(404).json({
+                success: false,
+                erro: "Imagem não encontrada"
+            });
+
         } catch (error) {
             return res.status(500).json({
+                success: false,
                 erro: "Erro ao deletar imagem"
             });
         }

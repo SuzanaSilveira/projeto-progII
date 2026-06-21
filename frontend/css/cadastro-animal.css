@@ -138,23 +138,26 @@
       height: 200px;
       display: flex; align-items: center; justify-content: center;
       position: relative; overflow: hidden;
+      background: #EFEAE0;
     }
-    .preview-img-area svg {
-      width: 100%; height: 100%;
+    .preview-img-area img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block;
     }
-    .preview-badge-status {
-      position: absolute; top: 12px; left: 12px;
-      background: #22c55e; color: #fff;
-      font-size: .68rem; font-weight: 700;
-      padding: 4px 10px; border-radius: 50px;
-      letter-spacing: .05em;
+    .preview-img-placeholder {
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      color: rgba(31,92,46,.35);
     }
+    .preview-img-placeholder svg { width: 34px; height: 34px; }
+    .preview-img-placeholder span { font-size: .78rem; font-family: 'Sora', sans-serif; }
+
     .preview-badge-species {
       position: absolute; top: 12px; right: 12px;
       background: rgba(255,255,255,.9);
       font-size: .72rem; font-weight: 600;
       padding: 4px 10px; border-radius: 50px;
       color: var(--dark);
+      display: none;
     }
 
     .preview-body { padding: 1.2rem 1.4rem 1.4rem; }
@@ -356,41 +359,99 @@
     }
     .fields-row .field { margin-bottom: 0; }
 
-    /* ── SELECTOR DE AVATAR ── */
-    .avatar-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: .6rem;
+    /* ═══════════════════════════════
+       UPLOAD DE FOTO (substitui o avatar)
+    ═══════════════════════════════ */
+    .upload-zone {
+      position: relative;
+      border: 2px dashed #D1D5DB;
+      border-radius: 14px;
+      background: #fff;
+      padding: 1.6rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
       margin-top: .3rem;
     }
-    .avatar-option {
-      position: relative; cursor: pointer;
-    }
-    .avatar-option input[type="radio"] {
-      position: absolute; opacity: 0; width: 0; height: 0;
-    }
-    .avatar-thumb {
-      border: 2px solid #E5E7EB;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #fff;
-      aspect-ratio: 1;
-      display: flex; align-items: center; justify-content: center;
-      transition: border-color .2s, box-shadow .2s, transform .15s;
-    }
-    .avatar-thumb svg { width: 90%; height: 90%; }
-    .avatar-option input:checked + .avatar-thumb {
+    .upload-zone:hover,
+    .upload-zone.dragover {
       border-color: var(--green);
-      box-shadow: 0 0 0 3px rgba(31,92,46,.15);
-      transform: scale(1.05);
+      background: var(--green-light);
     }
-    .avatar-option:hover .avatar-thumb {
-      border-color: var(--green-mid);
+    .upload-zone input[type="file"] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer; width: 100%; height: 100%;
     }
-    .avatar-name {
-      display: block; text-align: center;
-      font-size: .65rem; font-weight: 600;
-      color: var(--muted); margin-top: .25rem;
+    .upload-zone-content {
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      pointer-events: none;
+    }
+    .upload-icon {
+      width: 42px; height: 42px;
+      background: var(--green-light);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .upload-zone:hover .upload-icon,
+    .upload-zone.dragover .upload-icon { background: rgba(31,92,46,.15); }
+    .upload-icon svg { width: 19px; height: 19px; stroke: var(--green); }
+    .upload-zone-content strong { font-size: .85rem; color: var(--dark); }
+    .upload-zone-content span { font-size: .74rem; color: var(--muted); }
+
+    /* preview do arquivo selecionado */
+    .upload-preview {
+      display: none;
+      align-items: center; gap: .9rem;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 14px;
+      padding: .7rem .9rem;
+      margin-top: .3rem;
+      background: #fff;
+    }
+    .upload-preview.show { display: flex; }
+    .upload-preview-thumb {
+      width: 56px; height: 56px;
+      border-radius: 10px;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--green-light);
+    }
+    .upload-preview-info { flex: 1; min-width: 0; text-align: left; }
+    .upload-preview-info strong {
+      display: block; font-size: .82rem; color: var(--dark);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .upload-preview-info span { font-size: .74rem; color: var(--muted); }
+    .upload-preview-remove {
+      width: 30px; height: 30px; flex-shrink: 0;
+      border-radius: 50%;
+      background: #FEF2F2; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: #EF4444; transition: background .2s;
+    }
+    .upload-preview-remove:hover { background: #FEE2E2; }
+    .upload-preview-remove svg { width: 14px; height: 14px; }
+
+    /* barra de progresso do upload */
+    .upload-progress-wrap {
+      display: none;
+      margin-top: .5rem;
+    }
+    .upload-progress-wrap.show { display: block; }
+    .upload-progress-bar {
+      height: 5px; border-radius: 3px;
+      background: #E5E7EB; overflow: hidden;
+    }
+    .upload-progress-fill {
+      height: 100%; width: 0%;
+      background: var(--green);
+      border-radius: 3px;
+      transition: width .2s ease;
+    }
+    .upload-progress-label {
+      font-size: .7rem; color: var(--muted); margin-top: .3rem;
+      display: flex; justify-content: space-between;
     }
 
     /* ── BOTÃO SUBMIT ── */
@@ -434,12 +495,15 @@
       border-left: 4px solid #22c55e;
     }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast.error { border-left-color: #EF4444; }
     .toast-icon {
       width: 36px; height: 36px; flex-shrink: 0;
       background: #dcfce7; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
     }
+    .toast.error .toast-icon { background: #FEE2E2; }
     .toast-icon svg { width: 16px; height: 16px; stroke: #22c55e; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .toast.error .toast-icon svg { stroke: #EF4444; }
     .toast-text strong { display: block; font-weight: 700; font-size: .88rem; color: var(--dark); }
     .toast-text span { font-size: .78rem; color: var(--muted); }
 
@@ -453,5 +517,4 @@
     @media (max-width: 520px) {
       .form-card { padding: 1.8rem 1.3rem 1.6rem; border-radius: 18px; }
       .fields-row { grid-template-columns: 1fr; }
-      .avatar-grid { grid-template-columns: repeat(2, 1fr); }
     }
