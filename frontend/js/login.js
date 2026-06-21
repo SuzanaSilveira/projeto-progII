@@ -83,9 +83,9 @@ form.addEventListener('submit', async (e) => {
     // Redirecionar baseado no tipo
     setTimeout(() => {
       if (data.usuario.tipo === 'admin') {
-        window.location.href = 'dashboard-admin.html';
+        window.location.href = 'tela-admin.html';
       } else {
-        window.location.href = '../pages/index.html';
+        window.location.href = '../pages/home.html';
       }
     }, 1000);
 
