@@ -83,14 +83,15 @@ async function carregarAnimais() {
   `;
 
   try {
-    const token = localStorage.getItem('token');
+  // 🔥 GERA TOKEN NO FORMATO BASE64
+const authToken = btoa(`${usuario.id}:${usuario.email}`);
 
-    const resposta = await fetch(`/api/animais/admin/${usuario.id}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
+  const resposta = await fetch('/api/admin/animais', {
+    headers: {
+      'Authorization': authToken,  // ← SEM "Bearer "
+      'Content-Type': 'application/json'
+    }
+  });
 
     if (!resposta.ok) {
       throw new Error(`Erro ${resposta.status}: ${resposta.statusText}`);
@@ -98,11 +99,12 @@ async function carregarAnimais() {
 
     const dados = await resposta.json();
 
-    if (!dados.success) {
-      throw new Error(dados.message || 'Erro ao buscar animais');
-    }
+    // Verifica se é array ou se tem a propriedade animais
+   if (!Array.isArray(dados) && !dados.animais) {
+   throw new Error('Erro ao buscar animais');
+}
 
-    ANIMALS = dados.animais || [];
+    ANIMALS = Array.isArray(dados) ? dados : (dados.animais || []);
 
     /* Atualiza stats */
     atualizarStats();
@@ -255,21 +257,23 @@ async function confirmDelete(id, nome) {
   if (!confirm(`Remover "${nome}" da plataforma?\nEsta ação não pode ser desfeita.`)) return;
 
   try {
-    const token = localStorage.getItem('token');
+  // 🔥 GERA TOKEN BASE64 NO NAVEGADOR
+const authToken = btoa(`${usuario.id}:${usuario.email}`);
 
-    const resposta = await fetch(`/api/animais/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
+  const resposta = await fetch(`/api/admin/animais/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': authToken,  // ← SEM "Bearer "
+      'Content-Type': 'application/json'
+    }
+  });
 
     const dados = await resposta.json();
 
-    if (!resposta.ok || !dados.success) {
-      throw new Error(dados.message || 'Erro ao remover animal');
-    }
+    if (!resposta.ok) {
+    const erro = await resposta.json();
+    throw new Error(erro.erro || 'Erro ao remover animal');
+}
 
     /* Remove do array local e atualiza a tela sem novo fetch */
     ANIMALS = ANIMALS.filter(a => a.id !== id);
