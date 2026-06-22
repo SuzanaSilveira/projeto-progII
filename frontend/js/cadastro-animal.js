@@ -296,7 +296,7 @@ $('animal-form').addEventListener('submit', async (e) => {
 
     showToast('success', 'Animal cadastrado com sucesso!', `"${nome}" foi publicado na plataforma 🐾`);
 
-    setTimeout(() => { window.location.href = 'animais.html'; }, 2200);
+    setTimeout(() => { window.location.href = 'tela-admin.html'; }, 2200);
 
   } catch (err) {
     /* ── ERRO ── */

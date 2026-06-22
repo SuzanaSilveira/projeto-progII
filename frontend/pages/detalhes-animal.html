@@ -1,0 +1,172 @@
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detalhes do Animal — Amigo Fiel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400&display=swap" rel="stylesheet" />
+  <script src="/js/detalhes-animal.js" defer></script>
+  <link rel="stylesheet" href="/css/detalhes-animal.css">
+
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a href="../home.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M4.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM9 7.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM12 22c-4.97 0-9-2.69-9-6 0-1.94 1.24-3.67 3.19-4.84C7.14 10.42 9.48 9.75 12 9.75s4.86.67 5.81 1.41C19.76 12.33 21 14.06 21 16c0 3.31-4.03 6-9 6z"/></svg>
+    </div>
+    <span class="logo-text">Amigo Fiel</span>
+  </a>
+  <nav>
+    <a href="../home.html">Inicio</a>
+    <a href="animais.html">Animais</a>
+    <a href="../index.html#adocao">Sobre</a>
+  </nav>
+  <div class="header-right">
+    <a href="../home.html" class="nav-btn-ghost">Voltar</a>
+  </div>
+  <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="../home.html">Inicio</a>
+  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  <a href="animais.html">Animais</a>
+  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  <span id="bc-nome">Carregando...</span>
+</div>
+
+<!-- CONTEUDO -->
+<div class="detail-wrapper">
+
+  <!-- FOTO -->
+  <div class="animal-image-col">
+    <div class="animal-photo" id="animal-photo-wrap"></div>
+  </div>
+
+  <!-- DADOS -->
+  <div class="animal-info-col">
+    <div class="animal-header">
+      <div class="status-pill">Disponivel para adocao</div>
+      <h1 class="animal-name" id="animal-nome">...</h1>
+      <div class="animal-meta-row" id="animal-meta-row"></div>
+    </div>
+
+    <hr class="divider" />
+    <div class="detail-grid" id="detail-grid"></div>
+    <hr class="divider" />
+
+    <div class="desc-section">
+      <h3>Sobre <span id="desc-nome">o animal</span></h3>
+      <p id="animal-descricao">...</p>
+    </div>
+
+    <div class="ong-card">
+      <div class="ong-icon">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div class="ong-info">
+        <strong id="ong-nome">ONG Responsavel</strong>
+        <span>Responsavel pelo cadastro e acompanhamento deste animal</span>
+      </div>
+    </div>
+
+    <button class="btn-interesse" id="btn-interesse" onclick="abrirModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Tenho interesse em adotar
+    </button>
+  </div>
+</div>
+
+<!-- MAIS ANIMAIS -->
+<section class="more-section">
+  <div class="more-header">
+    <span class="section-label">Conheca mais</span>
+    <h2 class="section-title">Outros animais disponiveis</h2>
+  </div>
+  <div class="more-grid" id="more-grid"></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="../home.html" class="logo">
+        <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M4.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM9 7.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM12 22c-4.97 0-9-2.69-9-6 0-1.94 1.24-3.67 3.19-4.84C7.14 10.42 9.48 9.75 12 9.75s4.86.67 5.81 1.41C19.76 12.33 21 14.06 21 16c0 3.31-4.03 6-9 6z"/></svg></div>
+        <span class="logo-text">Amigo Fiel</span>
+      </a>
+      <p>Conectamos animais que precisam de amor a familias que tem carinho para dar.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Plataforma</h5>
+      <a href="animais.html">Animais disponiveis</a>
+      <a href="../index.html#adocao">Como adotar</a>
+    </div>
+    <div class="footer-col">
+      <h5>Contato</h5>
+      <a href="mailto:contato@amigofiel.com.br">contato@amigofiel.com.br</a>
+      <a href="#">Joinville, SC</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>2025 Amigo Fiel. Todos os direitos reservados.</span>
+    <a href="#">Privacidade</a>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="fecharModal()" aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div id="modal-form-content">
+      <div class="modal-header">
+        <div class="modal-eyebrow">Interesse em adocao</div>
+        <h2 class="modal-title" id="modal-title">Voce deseja adotar <span id="modal-animal-nome">este animal</span>?</h2>
+        <p class="modal-subtitle">Demonstre seu interesse e aguarde o contato da <strong>ONG responsavel</strong>.</p>
+      </div>
+
+      <div class="modal-notice">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Sua mensagem sera enviada a ONG responsavel pelo animal. Eles entrao em contato com voce em breve.
+      </div>
+
+      <div class="modal-field">
+        <label for="modal-msg">
+          Mensagem
+          <span class="optional">opcional</span>
+        </label>
+        <textarea class="modal-textarea" id="modal-msg" maxlength="500" placeholder="Ola! Gostaria de conhecer melhor o animal e saber mais sobre o processo de adocao."></textarea>
+        <div class="char-count" id="char-count">0 / 500 caracteres</div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-modal-cancel" onclick="fecharModal()">Cancelar</button>
+        <button class="btn-modal-send" id="btn-modal-send" onclick="enviarInteresse()">
+          <div class="btn-spinner" id="btn-spinner"></div>
+          <svg id="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          <span id="send-text">Enviar interesse</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-success" id="modal-success">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3>Interesse enviado!</h3>
+      <p>A ONG responsavel recebeu sua mensagem e entrara em contato com voce em breve.</p>
+      <button class="btn-modal-done" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+
