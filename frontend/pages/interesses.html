@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interesses de Adoção — Admin · Amigo Fiel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="/js/interesses.js" defer></script>
+  <link rel="stylesheet" href="/css/interesses.css">
+
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <a href="/" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm4 9.2c0 .4-.4.8-.8.8H8.8c-.4 0-.8-.4-.8-.8V15c0-2.2 3.6-3 4-3s4 .8 4 3v1.2z"/>
+      </svg>
+    </div>
+    <span class="logo-text">Amigo Fiel</span>
+  </a>
+  <nav>
+    <a href="#">Início</a>
+    <a href="#">Animais</a>
+    <a href="#" class="active">Admin</a>
+    <a href="#">Sobre</a>
+  </nav>
+  <div class="header-right">
+    <a href="#" class="nav-btn-ghost">Login</a>
+    <a href="#" class="nav-btn-solid">Cadastro</a>
+  </div>
+  <button class="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ── BREADCRUMB ── -->
+<div class="breadcrumb">
+  <a href="#">Admin</a>
+  <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+  Interesses de adoção
+</div>
+
+<!-- ── MAIN ── -->
+<main class="page-wrapper">
+
+  <div class="page-header">
+    <div class="page-eyebrow">Painel admin</div>
+    <h1 class="page-title">Interesses de adoção</h1>
+    <p class="page-sub">Acompanhe quem demonstrou interesse em adotar um animal e entre em contato com os candidatos.</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Total de interesses</div>
+      <div class="stat-value" id="stat-total">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Novos</div>
+      <div class="stat-value green" id="stat-new">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Animais com interesse</div>
+      <div class="stat-value amber" id="stat-animals">—</div>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters-row">
+    <span class="filter-label">Filtrar por:</span>
+    <button class="filter-btn active" data-filter="todos">Todos</button>
+    <button class="filter-btn" data-filter="novo">Novos</button>
+    <button class="filter-btn" data-filter="visto">Vistos</button>
+  </div>
+
+  <!-- CARDS -->
+  <div class="cards-list" id="cards-list"></div>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm4 9.2c0 .4-.4.8-.8.8H8.8c-.4 0-.8-.4-.8-.8V15c0-2.2 3.6-3 4-3s4 .8 4 3v1.2z"/>
+          </svg>
+        </div>
+        <span class="logo-text">Amigo Fiel</span>
+      </a>
+      <p>Conectando animais que precisam de um lar a famílias cheias de amor.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Plataforma</h5>
+      <a href="#">Início</a>
+      <a href="#">Ver animais</a>
+      <a href="#">Como funciona</a>
+      <a href="#">Sobre nós</a>
+    </div>
+    <div class="footer-col">
+      <h5>Para ONGs</h5>
+      <a href="#">Cadastrar ONG</a>
+      <a href="#">Anunciar animal</a>
+      <a href="#">Painel admin</a>
+      <a href="#">Contato</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Amigo Fiel. Todos os direitos reservados.</span>
+    <span><a href="#">Privacidade</a> · <a href="#">Termos</a></span>
+  </div>
+</footer>
+
+<!-- ── MODAL CONTATO ── -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal-close" onclick="closeModal()" aria-label="Fechar">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    </div>
+    <div class="modal-eyebrow">Contato</div>
+    <h2 class="modal-title" id="modal-title">Enviar email?</h2>
+    <p class="modal-subtitle">Você quer entrar em contato com <strong id="modal-name"></strong> sobre o interesse em adotar <strong id="modal-animal"></strong>?</p>
+
+    <div class="modal-recipient">
+      <div class="recipient-icon">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <div class="recipient-info">
+        <strong id="modal-email-name"></strong>
+        <span id="modal-email"></span>
+      </div>
+    </div>
+
+    <div class="modal-notice">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Seu cliente de email será aberto com o destinatário, assunto e uma mensagem padrão já preenchidos.
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-modal-send" onclick="openEmail()">
+        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Abrir email
+      </button>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>
