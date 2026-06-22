@@ -229,6 +229,11 @@ function abrirModal() {
   setTimeout(() => document.getElementById('modal-msg').focus(), 300);
 }
 
+function fecharModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 /* ════════════════════════════════════════════
    ENVIAR INTERESSE
 ════════════════════════════════════════════ */
