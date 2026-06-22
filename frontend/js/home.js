@@ -1,79 +1,109 @@
 /* ════════════════════════════════════════════
-   home.js — Lógica da tela inicial do usuário
-   Amigo Fiel
+   home.js — Amigo Fiel
+   Busca animais da API e renderiza os cards
 ════════════════════════════════════════════ */
 
-/* ── SVGs reutilizados (mesmos avatares do cadastro de animais) ── */
 const AVATARS_SVG = {
-  cachorro1: {
+  cachorro: {
     label: '🐶 Cachorro',
     svg: `<svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="210" fill="#A8D8C8"/><ellipse cx="150" cy="145" rx="80" ry="55" fill="#E8C87A"/><rect x="108" y="168" width="20" height="40" rx="10" fill="#D4A852"/><rect x="138" y="172" width="20" height="38" rx="10" fill="#D4A852"/><rect x="168" y="172" width="20" height="36" rx="10" fill="#D4A852"/><rect x="196" y="168" width="20" height="38" rx="10" fill="#D4A852"/><ellipse cx="108" cy="110" rx="44" ry="40" fill="#E8C87A"/><ellipse cx="93" cy="97" rx="15" ry="19" fill="#D4A852"/><ellipse cx="122" cy="97" rx="15" ry="19" fill="#D4A852"/><ellipse cx="107" cy="123" rx="20" ry="13" fill="#D4A852"/><circle cx="99" cy="110" r="4" fill="#1A1A1A"/><circle cx="116" cy="110" r="4" fill="#1A1A1A"/><ellipse cx="107" cy="130" rx="9" ry="6" fill="#C47A5A"/><path d="M230 135 Q255 105 240 80" stroke="#E8C87A" stroke-width="14" fill="none" stroke-linecap="round"/></svg>`
   },
-  cachorro2: {
-    label: '🐶 Cachorro',
-    svg: `<svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="210" fill="#D4E8F0"/><ellipse cx="155" cy="140" rx="95" ry="58" fill="#C8A882"/><rect x="104" y="163" width="22" height="45" rx="11" fill="#B8946C"/><rect x="136" y="168" width="22" height="42" rx="11" fill="#B8946C"/><rect x="170" y="168" width="22" height="42" rx="11" fill="#B8946C"/><rect x="202" y="163" width="22" height="45" rx="11" fill="#B8946C"/><ellipse cx="100" cy="98" rx="50" ry="45" fill="#C8A882"/><ellipse cx="83" cy="84" rx="17" ry="22" fill="#B8946C"/><ellipse cx="117" cy="84" rx="17" ry="22" fill="#B8946C"/><circle cx="91" cy="100" r="5" fill="#1A1A1A"/><circle cx="110" cy="100" r="5" fill="#1A1A1A"/><ellipse cx="185" cy="128" rx="25" ry="18" fill="rgba(0,0,0,.12)"/><path d="M250 120 Q270 95 255 72" stroke="#C8A882" stroke-width="16" fill="none" stroke-linecap="round"/></svg>`
-  },
-  gato1: {
+  gato: {
     label: '🐱 Gato',
     svg: `<svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="210" fill="#E8E8F8"/><ellipse cx="150" cy="150" rx="72" ry="52" fill="#888"/><rect x="118" y="168" width="18" height="38" rx="9" fill="#777"/><rect x="148" y="172" width="18" height="36" rx="9" fill="#777"/><rect x="178" y="172" width="18" height="35" rx="9" fill="#777"/><path d="M222 155 Q255 130 248 105 Q242 88 232 98" stroke="#777" stroke-width="14" fill="none" stroke-linecap="round"/><ellipse cx="145" cy="100" rx="48" ry="44" fill="#888"/><polygon points="112,82 100,54 128,72" fill="#888"/><polygon points="178,82 190,54 162,72" fill="#888"/><polygon points="114,80 104,58 128,72" fill="#F9C5C5"/><polygon points="176,80 186,58 162,72" fill="#F9C5C5"/><circle cx="135" cy="100" r="5" fill="#1A1A1A"/><circle cx="155" cy="100" r="5" fill="#1A1A1A"/><ellipse cx="145" cy="114" rx="8" ry="5" fill="#F9C5C5"/></svg>`
   },
-  gato2: {
-    label: '🐱 Gato',
-    svg: `<svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="210" fill="#F0E8F8"/><ellipse cx="150" cy="148" rx="68" ry="50" fill="#F4A035"/><rect x="120" y="165" width="18" height="40" rx="9" fill="#E8943A"/><rect x="150" y="170" width="18" height="37" rx="9" fill="#E8943A"/><rect x="178" y="170" width="18" height="37" rx="9" fill="#E8943A"/><path d="M218 150 Q248 125 240 100 Q234 85 225 95" stroke="#F4A035" stroke-width="13" fill="none" stroke-linecap="round"/><ellipse cx="148" cy="100" rx="46" ry="42" fill="#F4A035"/><polygon points="115,82 103,55 130,72" fill="#F4A035"/><polygon points="180,82 192,55 165,72" fill="#F4A035"/><polygon points="117,80 107,58 130,72" fill="#F9C5C5"/><polygon points="178,80 188,58 165,72" fill="#F9C5C5"/><circle cx="137" cy="98" r="5" fill="#2D3748"/><circle cx="158" cy="98" r="5" fill="#2D3748"/><ellipse cx="147" cy="112" rx="8" ry="5" fill="#E86B3A"/></svg>`
+  outro: {
+    label: '🐾 Animal',
+    svg: `<svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="210" fill="#F0E8D8"/><text x="150" y="120" text-anchor="middle" font-size="80">🐾</text></svg>`
   }
 };
 
-/* ── Dados simulados (substituir por fetch('/api/animais') do backend) ── */
-const ANIMALS = [
-  { id: 1, nome: 'Bolinha', especie: 'cachorro', raca: 'SRD', porte: 'Pequeno', idade: '2 anos', idadeGrupo: 'adulto', imagem: 'cachorro1', descricao: 'Dócil e brincalhão, adora um carinho.' },
-  { id: 2, nome: 'Luna', especie: 'gato', raca: 'SRD', porte: 'Médio', idade: '1 ano', idadeGrupo: 'adulto', imagem: 'gato1', descricao: 'Independente, mas carinhosa com quem confia.' },
-  { id: 3, nome: 'Thor', especie: 'cachorro', raca: 'SRD', porte: 'Grande', idade: '3 anos', idadeGrupo: 'adulto', imagem: 'cachorro2', descricao: 'Protetor e leal, ótimo com crianças.' },
-  { id: 4, nome: 'Mel', especie: 'gato', raca: 'SRD', porte: 'Pequeno', idade: '4 meses', idadeGrupo: 'filhote', imagem: 'gato2', descricao: 'Cheia de energia, ama brincar o dia todo.' },
-  { id: 5, nome: 'Pipoca', especie: 'cachorro', raca: 'SRD', porte: 'Médio', idade: '4 anos', idadeGrupo: 'adulto', imagem: 'cachorro1', descricao: 'Calma e companheira, ideal para apartamento.' },
-  { id: 6, nome: 'Fumaça', especie: 'gato', raca: 'SRD', porte: 'Grande', idade: '7 anos', idadeGrupo: 'idoso', imagem: 'gato1', descricao: 'Tranquilo, gosta de um cantinho ao sol.' },
-  { id: 7, nome: 'Biscoito', especie: 'cachorro', raca: 'SRD', porte: 'Pequeno', idade: '3 meses', idadeGrupo: 'filhote', imagem: 'cachorro2', descricao: 'Filhote curioso, está aprendendo tudo.' },
-  { id: 8, nome: 'Pêssego', especie: 'gato', raca: 'SRD', porte: 'Médio', idade: '2 anos', idadeGrupo: 'adulto', imagem: 'gato2', descricao: 'Adora colo e ronrona o tempo todo.' },
-];
+/* Detecta o avatar pelo campo especie vindo do banco */
+function getAvatar(especie) {
+  const e = (especie || '').toLowerCase();
+  if (e.includes('cachorro') || e.includes('cão') || e.includes('cao')) return AVATARS_SVG.cachorro;
+  if (e.includes('gato')) return AVATARS_SVG.gato;
+  return AVATARS_SVG.outro;
+}
 
-let currentResults = [...ANIMALS];
+/* Classifica idade em grupo para filtro */
+function classificarIdade(idade) {
+  if (!idade) return 'adulto';
+  const n = parseFloat(String(idade));
+  const str = String(idade).toLowerCase();
+  if (str.includes('mes') || str.includes('mês') || n < 1) return 'filhote';
+  if (n >= 8) return 'idoso';
+  return 'adulto';
+}
+
+let ANIMALS = [];
+let currentResults = [];
 
 /* ════════════════════════════════════════════
    INICIALIZAÇÃO
 ════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
-  /* ── Nome do usuário logado ──
-     Substituir pela leitura real da sessão/token do backend.
-     Ex: const userName = sessionStorage.getItem('userName') || 'Visitante'; */
-  const userName = getLoggedUserName();
+  /* Usuário logado */
+  const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+  const nome = usuario.nome || 'Visitante';
+  const email = usuario.email || '';
 
-  document.getElementById('welcome-name').textContent = userName;
-  document.getElementById('user-name-dropdown').textContent = userName;
-  document.getElementById('user-email-dropdown').textContent = getLoggedUserEmail();
+  document.getElementById('welcome-name').textContent = nome.split(' ')[0];
+  document.getElementById('user-name-dropdown').textContent = nome;
+  document.getElementById('user-email-dropdown').textContent = email;
 
-  /* Stats */
-  document.getElementById('stat-disponiveis').textContent = ANIMALS.length;
+  /* Carrega animais do banco */
+  await carregarAnimais();
 
-  /* Render inicial */
-  renderAnimals(currentResults);
-
-  /* Scroll reveal */
   initScrollReveal();
-
-  /* Eventos de busca e filtro */
   setupSearchAndFilters();
 });
 
 /* ════════════════════════════════════════════
-   SESSÃO (placeholder até integrar backend)
+   BUSCAR ANIMAIS DA API
 ════════════════════════════════════════════ */
-function getLoggedUserName() {
-  // return sessionStorage.getItem('userName') || 'Visitante';
-  return 'Larissa';
-}
-function getLoggedUserEmail() {
-  // return sessionStorage.getItem('userEmail') || '';
-  return 'larissa@email.com';
+async function carregarAnimais() {
+  const grid = document.getElementById('animals-grid');
+
+  /* Skeleton enquanto carrega */
+  grid.innerHTML = `
+    <div class="card-skeleton"></div>
+    <div class="card-skeleton"></div>
+    <div class="card-skeleton"></div>
+    <div class="card-skeleton"></div>
+  `;
+
+  try {
+    const res = await fetch('/api/animais/disponiveis');
+    if (!res.ok) throw new Error(`Erro ${res.status}`);
+
+    const dados = await res.json();
+    ANIMALS = dados.animais || [];
+
+    /* Normaliza campo idadeGrupo para filtros */
+    ANIMALS = ANIMALS.map(a => ({
+      ...a,
+      idadeGrupo: classificarIdade(a.idade)
+    }));
+
+    currentResults = [...ANIMALS];
+
+    document.getElementById('stat-disponiveis').textContent = ANIMALS.length;
+    document.getElementById('results-count-number').textContent = ANIMALS.length;
+
+    renderAnimals(ANIMALS);
+
+  } catch (erro) {
+    console.error('Erro ao carregar animais:', erro);
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">😕</div>
+        <h3>Não foi possível carregar os animais</h3>
+        <p>${erro.message}</p>
+        <button class="btn-reset" onclick="carregarAnimais()">Tentar novamente</button>
+      </div>`;
+  }
 }
 
 /* ════════════════════════════════════════════
@@ -98,21 +128,38 @@ function renderAnimals(list) {
   }
 
   grid.innerHTML = list.map(animal => {
-    const av = AVATARS_SVG[animal.imagem];
+    const av = getAvatar(animal.especie);
+
+    /* Imagem: foto real do banco ou SVG de fallback */
+    const imgHtml = animal.imagem_url
+      ? `<img src="${animal.imagem_url}" alt="Foto de ${animal.nome}" style="width:100%;height:100%;object-fit:cover;" onerror="this.outerHTML='${av.svg.replace(/'/g, "\\'")}'">`
+      : av.svg;
+
+    const idadeTexto = animal.idade != null
+      ? `${animal.idade} ano${animal.idade !== 1 ? 's' : ''}`
+      : 'Idade não informada';
+
+    const porteTexto = animal.porte
+      ? `${animal.porte} porte`
+      : '';
+
+    /* Link com ?id= para a página de detalhes */
+    const linkDetalhes = `pages/detalhes-animal.html?id=${animal.id}`;
+
     return `
-      <article class="animal-card reveal" onclick="window.location.href='pages/detalhes-animal.html'">
+      <article class="animal-card reveal" onclick="window.location.href='${linkDetalhes}'">
         <div class="card-img-wrap">
-          ${av.svg}
+          ${imgHtml}
           <span class="card-badge">✓ Disponível</span>
           <span class="card-species">${av.label}</span>
         </div>
         <div class="card-body">
           <div class="card-name">${animal.nome}</div>
           <div class="card-meta">
-            <span class="tag">${animal.porte} porte</span>
-            <span class="tag">${animal.idade}</span>
+            ${porteTexto ? `<span class="tag">${porteTexto}</span>` : ''}
+            <span class="tag">${idadeTexto}</span>
           </div>
-          <a href="pages/detalhes-animal.html" class="card-btn" onclick="event.stopPropagation()">Ver detalhes</a>
+          <a href="${linkDetalhes}" class="card-btn" onclick="event.stopPropagation()">Ver detalhes</a>
         </div>
       </article>`;
   }).join('');
@@ -124,36 +171,36 @@ function renderAnimals(list) {
    BUSCA + FILTROS
 ════════════════════════════════════════════ */
 function setupSearchAndFilters() {
-  const searchInput = document.getElementById('search-input');
+  const searchInput   = document.getElementById('search-input');
   const clearSearchBtn = document.getElementById('btn-clear-search');
-  const especieSel = document.getElementById('filter-especie');
-  const porteSel = document.getElementById('filter-porte');
-  const idadeSel = document.getElementById('filter-idade');
-  const sortSel = document.getElementById('sort-select');
+  const especieSel    = document.getElementById('filter-especie');
+  const porteSel      = document.getElementById('filter-porte');
+  const idadeSel      = document.getElementById('filter-idade');
+  const sortSel       = document.getElementById('sort-select');
   const clearFiltersBtn = document.getElementById('btn-clear-filters');
-  const searchForm = document.getElementById('search-form');
+  const searchForm    = document.getElementById('search-form');
 
   function applyFilters() {
-    const term = searchInput.value.trim().toLowerCase();
+    const term   = searchInput.value.trim().toLowerCase();
     const especie = especieSel.value;
-    const porte = porteSel.value;
-    const idade = idadeSel.value;
+    const porte  = porteSel.value;
+    const idade  = idadeSel.value;
 
     let result = ANIMALS.filter(a => {
       const matchTerm = !term ||
-        a.nome.toLowerCase().includes(term) ||
-        a.especie.toLowerCase().includes(term) ||
-        a.raca.toLowerCase().includes(term) ||
-        a.idade.toLowerCase().includes(term);
+        (a.nome   || '').toLowerCase().includes(term) ||
+        (a.especie|| '').toLowerCase().includes(term) ||
+        (a.raca   || '').toLowerCase().includes(term);
 
-      const matchEspecie = !especie || a.especie === especie;
-      const matchPorte = !porte || a.porte === porte;
+      const matchEspecie = !especie ||
+        (a.especie || '').toLowerCase().includes(especie.toLowerCase());
+      const matchPorte = !porte ||
+        (a.porte  || '').toLowerCase() === porte.toLowerCase();
       const matchIdade = !idade || a.idadeGrupo === idade;
 
       return matchTerm && matchEspecie && matchPorte && matchIdade;
     });
 
-    // ordenação
     const sortVal = sortSel.value;
     if (sortVal === 'nome-az') result.sort((a, b) => a.nome.localeCompare(b.nome));
     if (sortVal === 'nome-za') result.sort((a, b) => b.nome.localeCompare(a.nome));
@@ -161,13 +208,11 @@ function setupSearchAndFilters() {
     currentResults = result;
     renderAnimals(result);
 
-    // toggle de botões auxiliares
     clearSearchBtn.classList.toggle('show', term.length > 0);
-    const hasActiveFilters = especie || porte || idade || term;
-    clearFiltersBtn.classList.toggle('show', !!hasActiveFilters);
+    clearFiltersBtn.classList.toggle('show', !!(especie || porte || idade || term));
   }
 
-  searchForm.addEventListener('submit', (e) => { e.preventDefault(); applyFilters(); });
+  searchForm.addEventListener('submit', e => { e.preventDefault(); applyFilters(); });
   searchInput.addEventListener('input', applyFilters);
   especieSel.addEventListener('change', applyFilters);
   porteSel.addEventListener('change', applyFilters);
@@ -184,11 +229,11 @@ function setupSearchAndFilters() {
 }
 
 function resetSearch() {
-  document.getElementById('search-input').value = '';
+  document.getElementById('search-input').value   = '';
   document.getElementById('filter-especie').value = '';
-  document.getElementById('filter-porte').value = '';
-  document.getElementById('filter-idade').value = '';
-  document.getElementById('sort-select').value = '';
+  document.getElementById('filter-porte').value   = '';
+  document.getElementById('filter-idade').value   = '';
+  document.getElementById('sort-select').value    = '';
   currentResults = [...ANIMALS];
   renderAnimals(currentResults);
   document.getElementById('btn-clear-search').classList.remove('show');
@@ -216,29 +261,39 @@ function initScrollReveal() {
    LOGOUT
 ════════════════════════════════════════════ */
 function logout() {
-  /*
-  ── INTEGRAÇÃO COM BACKEND ──
-  sessionStorage.removeItem('userName');
-  sessionStorage.removeItem('userEmail');
-  sessionStorage.removeItem('token');
-  ──────────────────────────── */
+  localStorage.removeItem('usuario');
+  localStorage.removeItem('token');
   window.location.href = 'index.html';
 }
 
 /* ════════════════════════════════════════════
-   MENU MOBILE (hambúrguer simples)
+   MENU MOBILE
 ════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
   const ham = document.querySelector('.hamburger');
   const nav = document.querySelector('header nav');
   if (!ham || !nav) return;
-
   ham.addEventListener('click', () => {
     const isOpen = nav.classList.toggle('nav-open-mobile');
-    if (isOpen) {
-      nav.style.cssText = 'display:flex;flex-direction:column;position:fixed;top:74px;left:0;right:0;background:var(--warm-white);padding:1.4rem 5%;gap:1rem;border-bottom:1px solid rgba(0,0,0,.06);z-index:99;';
-    } else {
-      nav.style.cssText = '';
-    }
+    nav.style.cssText = isOpen
+      ? 'display:flex;flex-direction:column;position:fixed;top:74px;left:0;right:0;background:var(--warm-white);padding:1.4rem 5%;gap:1rem;border-bottom:1px solid rgba(0,0,0,.06);z-index:99;'
+      : '';
   });
 });
+
+/* ── Skeleton CSS injetado ── */
+const skeletonStyle = document.createElement('style');
+skeletonStyle.textContent = `
+  .card-skeleton {
+    height: 320px;
+    border-radius: 16px;
+    background: linear-gradient(90deg, #e2e8e4 25%, #f0f4f1 50%, #e2e8e4 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+`;
+document.head.appendChild(skeletonStyle);
