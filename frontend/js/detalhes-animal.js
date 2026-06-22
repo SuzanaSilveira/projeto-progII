@@ -127,12 +127,12 @@ function preencherPagina(a) {
 
   /* Grade de detalhes */
   const campos = [
-    { label: 'Espécie',  valor: a.especie },
-    { label: 'Raça',     valor: a.raca || 'SRD' },
-    { label: 'Porte',    valor: a.porte },
-    { label: 'Idade',    valor: idadeTexto },
-    { label: 'Sexo',     valor: a.sexo },
-    { label: 'Status',   valor: a.status },
+    { label: 'Espécie', valor: a.especie },
+    { label: 'Raça', valor: a.raca || 'SRD' },
+    { label: 'Porte', valor: a.porte },
+    { label: 'Idade', valor: idadeTexto },
+    { label: 'Sexo', valor: a.sexo },
+    { label: 'Status', valor: a.status },
   ].filter(c => c.valor);
 
   const grid = document.getElementById('detail-grid');
@@ -220,62 +220,61 @@ function mostrarErro(titulo, detalhe) {
    MODAL DE INTERESSE
 ════════════════════════════════════════════ */
 function abrirModal() {
+  // Guarda: só abre se o animal já foi carregado
+  const animalId = document.getElementById('btn-interesse').dataset.animalId;
+  if (!animalId) return;
+
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
   setTimeout(() => document.getElementById('modal-msg').focus(), 300);
 }
 
-function fecharModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-document.getElementById('modal-overlay').addEventListener('click', e => {
-  if (e.target === e.currentTarget) fecharModal();
-});
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') fecharModal();
-});
-
-/* Contador de caracteres */
-document.getElementById('modal-msg').addEventListener('input', function () {
-  const n = this.value.length;
-  const el = document.getElementById('char-count');
-  el.textContent = `${n} / 500 caracteres`;
-  el.className = 'char-count' + (n >= 500 ? ' at-limit' : n >= 400 ? ' near-limit' : '');
-});
-
 /* ════════════════════════════════════════════
    ENVIAR INTERESSE
 ════════════════════════════════════════════ */
 async function enviarInteresse() {
-  const btn     = document.getElementById('btn-modal-send');
+  const btn = document.getElementById('btn-modal-send');
   const spinner = document.getElementById('btn-spinner');
-  const icon    = document.getElementById('send-icon');
-  const txt     = document.getElementById('send-text');
+  const icon = document.getElementById('send-icon');
+  const txt = document.getElementById('send-text');
 
+  const mensagem = document.getElementById('modal-msg').value.trim();
+  const animalId = document.getElementById('btn-interesse').dataset.animalId;
+
+  // Lê o usuário do localStorage
+  let usuario = {};
+  try { usuario = JSON.parse(localStorage.getItem('usuario') || '{}'); } catch (_) { }
+
+  // Valida remetente_id antes de sequer chamar a API
+  const remetenteId = usuario.id ?? null;
+  if (!remetenteId) {
+    alert('Você precisa estar logado para demonstrar interesse.');
+    return;
+  }
+
+  // UX: loading
   btn.disabled = true;
   spinner.style.display = 'block';
   icon.style.display = 'none';
   txt.textContent = 'Enviando...';
 
-  const mensagem = document.getElementById('modal-msg').value.trim();
-  const usuario  = JSON.parse(localStorage.getItem('usuario') || '{}');
-  const animalId = document.getElementById('btn-interesse').dataset.animalId;
-
   try {
-    const res = await fetch('/api/animais/' + animalId + '/contato', {
+    const res = await fetch(`/api/animais/${animalId}/contato`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        remetente_id: usuario.id || null,
+        remetente_id: remetenteId,
         mensagem: mensagem || 'Tenho interesse em adotar este animal.',
       })
     });
 
-    /* Se o endpoint ainda não existir, simula sucesso para não travar a UI */
-    if (!res.ok && res.status !== 404) throw new Error('Falha ao enviar.');
+    // Trata TODOS os erros — sem mais "simular sucesso"
+    if (!res.ok) {
+      const corpo = await res.json().catch(() => ({}));
+      throw new Error(corpo.message || `Erro ${res.status}`);
+    }
 
+    // Sucesso real
     document.getElementById('modal-form-content').style.display = 'none';
     document.getElementById('modal-success').classList.add('show');
 
@@ -286,7 +285,7 @@ async function enviarInteresse() {
     bi.onclick = null;
 
   } catch (e) {
-    alert('Não foi possível enviar. Tente novamente.');
+    alert(`Não foi possível enviar: ${e.message}`);
     btn.disabled = false;
     spinner.style.display = 'none';
     icon.style.display = '';

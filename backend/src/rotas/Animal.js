@@ -88,8 +88,11 @@ router.get('/buscar/por-porte/:porte', animalController.buscarPorPorte);
  *       200:
  *         description: Lista de animais do administrador
  */
+router.get('/contatos/todos', animalController.listarContatos);
+router.patch('/contatos/:id/status', animalController.atualizarStatusContato);
 router.get('/admin/:administrador_id', animalController.buscarPorAdministrador);
 router.get('/buscar/por-porte/:porte', animalController.buscarPorPorte);
+router.post('/:id/contato', animalController.registrarContato);
 router.get('/:id', animalController.buscarPorId);
 
 /**
