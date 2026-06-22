@@ -34,6 +34,9 @@ async function carregarAnimais() {
             const card = document.createElement('article');
             card.className = 'animal-card reveal';
 
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', () => window.location.href = '/pages/login.html');
+
             card.innerHTML = `
         <div class="card-img-wrap">
           <img
@@ -56,7 +59,7 @@ async function carregarAnimais() {
             <span class="tag">${animal.porte}</span>
             <span class="tag">${animal.idade}</span>
           </div>
-          <a href="/pages/detalhes-animal.html?id=${animal.id}" class="card-btn">
+          <a href="/pages/login.html" class="card-btn" onclick="event.stopPropagation()">
             Ver detalhes
           </a>
         </div>`;

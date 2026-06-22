@@ -144,7 +144,7 @@ function renderAnimals(list) {
       : '';
 
     /* Link com ?id= para a página de detalhes */
-    const linkDetalhes = `pages/detalhes-animal.html?id=${animal.id}`;
+    const linkDetalhes = `detalhes-animal.html?id=${animal.id}`;
 
     return `
       <article class="animal-card reveal" onclick="window.location.href='${linkDetalhes}'">
@@ -171,31 +171,31 @@ function renderAnimals(list) {
    BUSCA + FILTROS
 ════════════════════════════════════════════ */
 function setupSearchAndFilters() {
-  const searchInput   = document.getElementById('search-input');
+  const searchInput = document.getElementById('search-input');
   const clearSearchBtn = document.getElementById('btn-clear-search');
-  const especieSel    = document.getElementById('filter-especie');
-  const porteSel      = document.getElementById('filter-porte');
-  const idadeSel      = document.getElementById('filter-idade');
-  const sortSel       = document.getElementById('sort-select');
+  const especieSel = document.getElementById('filter-especie');
+  const porteSel = document.getElementById('filter-porte');
+  const idadeSel = document.getElementById('filter-idade');
+  const sortSel = document.getElementById('sort-select');
   const clearFiltersBtn = document.getElementById('btn-clear-filters');
-  const searchForm    = document.getElementById('search-form');
+  const searchForm = document.getElementById('search-form');
 
   function applyFilters() {
-    const term   = searchInput.value.trim().toLowerCase();
+    const term = searchInput.value.trim().toLowerCase();
     const especie = especieSel.value;
-    const porte  = porteSel.value;
-    const idade  = idadeSel.value;
+    const porte = porteSel.value;
+    const idade = idadeSel.value;
 
     let result = ANIMALS.filter(a => {
       const matchTerm = !term ||
-        (a.nome   || '').toLowerCase().includes(term) ||
-        (a.especie|| '').toLowerCase().includes(term) ||
-        (a.raca   || '').toLowerCase().includes(term);
+        (a.nome || '').toLowerCase().includes(term) ||
+        (a.especie || '').toLowerCase().includes(term) ||
+        (a.raca || '').toLowerCase().includes(term);
 
       const matchEspecie = !especie ||
         (a.especie || '').toLowerCase().includes(especie.toLowerCase());
       const matchPorte = !porte ||
-        (a.porte  || '').toLowerCase() === porte.toLowerCase();
+        (a.porte || '').toLowerCase() === porte.toLowerCase();
       const matchIdade = !idade || a.idadeGrupo === idade;
 
       return matchTerm && matchEspecie && matchPorte && matchIdade;
@@ -229,11 +229,11 @@ function setupSearchAndFilters() {
 }
 
 function resetSearch() {
-  document.getElementById('search-input').value   = '';
+  document.getElementById('search-input').value = '';
   document.getElementById('filter-especie').value = '';
-  document.getElementById('filter-porte').value   = '';
-  document.getElementById('filter-idade').value   = '';
-  document.getElementById('sort-select').value    = '';
+  document.getElementById('filter-porte').value = '';
+  document.getElementById('filter-idade').value = '';
+  document.getElementById('sort-select').value = '';
   currentResults = [...ANIMALS];
   renderAnimals(currentResults);
   document.getElementById('btn-clear-search').classList.remove('show');
