@@ -198,10 +198,10 @@ function criarCard(animal) {
 
   card.innerHTML = `
     <div class="card-img-wrap">
-      ${animal.imagem_url
-        ? `<img src="${animal.imagem_url}" alt="${animal.nome}" class="card-image" onerror="this.parentElement.innerHTML='<div class=\\'card-svg-fallback\\'>${FALLBACK_SVG[fallbackKey].replace(/`/g, '\\`')}</div>'">`
-        : `<div class="card-svg-fallback">${FALLBACK_SVG[fallbackKey]}</div>`
-      }
+   ${animal.imagem_url
+  ? `<img src="${animal.imagem_url}" alt="${animal.nome}" class="card-image" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">`
+  : `<div class="card-svg-fallback">${FALLBACK_SVG[fallbackKey]}</div>`
+}
       <span class="card-status ${statusClass}">${statusLabel}</span>
       <span class="card-species">${labelEspecie}</span>
     </div>

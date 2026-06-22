@@ -39,15 +39,10 @@ async function carregarAnimais() {
 
             card.innerHTML = `
         <div class="card-img-wrap">
-          <img
-            src="${animal.imagem_url}"
-            alt="Foto de ${animal.nome}"
-            class="card-img"
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-          />
-          <div class="card-img-fallback" style="display:none;">
-            ${animal.especie === 'cachorro' ? fallbackCachorro() : fallbackGato()}
-          </div>
+          ${animal.imagem_url
+  ? `<img src="${animal.imagem_url}" alt="Foto de ${animal.nome}" class="card-img" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">`
+  : (animal.especie === 'cachorro' ? fallbackCachorro() : fallbackGato())
+}
           <span class="card-badge">✓ Disponível</span>
           <span class="card-species">
             ${animal.especie === 'cachorro' ? '🐶 Cachorro' : '🐱 Gato'}
