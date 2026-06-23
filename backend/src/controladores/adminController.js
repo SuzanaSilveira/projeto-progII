@@ -68,22 +68,47 @@ const adminController = {
         }
     },
     
-    // Deletar animal
-    deletarAnimal(req, res) {
-        const { id } = req.params;
-        
-        try {
-            const result = db.prepare('DELETE FROM animais WHERE id = ?').run(id);
-            
-            if (result.changes === 0) {
-                return res.status(404).json({ erro: "Animal não encontrado" });
-            }
-            
-            res.json({ mensagem: "Animal deletado com sucesso" });
-        } catch (error) {
-            res.status(500).json({ erro: "Erro ao deletar animal" });
+
+   // Deletar animal (com exclusão em cascata)
+deletarAnimal(req, res) {
+    const { id } = req.params;
+    
+    try {
+        // Primeiro, verifica se o animal existe
+        const animal = db.prepare('SELECT * FROM animais WHERE id = ?').get(id);
+        if (!animal) {
+            return res.status(404).json({ erro: "Animal não encontrado" });
         }
-    },
+
+        // 🔥 IMPORTANTE: Deleta os contatos (solicitações) relacionados primeiro
+        const contatosDeletados = db.prepare('DELETE FROM contatos WHERE animal_id = ?').run(id);
+        console.log(`🗑️ ${contatosDeletados.changes} contatos deletados para o animal ${id}`);
+
+        // Depois deleta o animal
+        const result = db.prepare('DELETE FROM animais WHERE id = ?').run(id);
+        
+        if (result.changes === 0) {
+            return res.status(404).json({ erro: "Animal não encontrado" });
+        }
+        
+        res.json({ 
+            mensagem: "Animal deletado com sucesso",
+            contatos_removidos: contatosDeletados.changes
+        });
+        
+    } catch (error) {
+        console.error('Erro ao deletar animal:', error);
+        
+        // Tratamento específico para erro de chave estrangeira
+        if (error.message.includes('FOREIGN KEY') || error.message.includes('constraint')) {
+            return res.status(400).json({ 
+                erro: "Não é possível deletar este animal porque ele possui solicitações vinculadas" 
+            });
+        }
+        
+        res.status(500).json({ erro: "Erro ao deletar animal" });
+    }
+},
     
     // ===== GERENCIAR SOLICITAÇÕES =====
     

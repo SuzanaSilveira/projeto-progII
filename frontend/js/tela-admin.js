@@ -253,27 +253,39 @@ function criarCardAdicionar() {
 /* ════════════════════════════════════════════
    DELETAR ANIMAL
 ════════════════════════════════════════════ */
+/* ════════════════════════════════════════════
+   DELETAR ANIMAL (VERSÃO CORRIGIDA)
+════════════════════════════════════════════ */
 async function confirmDelete(id, nome) {
   if (!confirm(`Remover "${nome}" da plataforma?\nEsta ação não pode ser desfeita.`)) return;
 
   try {
-  // 🔥 GERA TOKEN BASE64 NO NAVEGADOR
-const authToken = btoa(`${usuario.id}:${usuario.email}`);
+    // 🔥 GERA TOKEN BASE64 NO NAVEGADOR
+    const authToken = btoa(`${usuario.id}:${usuario.email}`);
 
-  const resposta = await fetch(`/api/admin/animais/${id}`, {
-    method: 'DELETE',
-    headers: {
-      'Authorization': authToken,  // ← SEM "Bearer "
-      'Content-Type': 'application/json'
+    const resposta = await fetch(`/api/admin/animais/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': authToken,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    // ✅ LÊ O CORPO DA RESPOSTA UMA ÚNICA VEZ
+    let dados;
+    const textoResposta = await resposta.text(); // Lê como texto primeiro
+    
+    try {
+      // Tenta converter para JSON se possível
+      dados = JSON.parse(textoResposta);
+    } catch {
+      // Se não for JSON, usa o texto como mensagem
+      dados = { mensagem: textoResposta || 'Operação concluída' };
     }
-  });
-
-    const dados = await resposta.json();
 
     if (!resposta.ok) {
-    const erro = await resposta.json();
-    throw new Error(erro.erro || 'Erro ao remover animal');
-}
+      throw new Error(dados.erro || dados.mensagem || 'Erro ao remover animal');
+    }
 
     /* Remove do array local e atualiza a tela sem novo fetch */
     ANIMALS = ANIMALS.filter(a => a.id !== id);
