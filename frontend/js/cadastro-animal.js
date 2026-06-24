@@ -19,6 +19,46 @@ const previewImgTag = $('preview-img-tag');
 const previewPlaceholder = $('preview-img-placeholder');
 const speciesBadgeEl = $('preview-species-badge');
 
+// ADICIONAR logo após a linha: const speciesBadgeEl = $('preview-species-badge');
+
+const animalIdEdicao = new URLSearchParams(window.location.search).get('id');
+
+if (animalIdEdicao) {
+  // Muda título e botão para modo edição
+  document.querySelector('.form-title').innerHTML = 'Editar<br>animal';
+  document.querySelector('.form-subtitle').textContent = 'Atualize os dados do animal na plataforma.';
+  $('btn-text').textContent = 'Salvar alterações';
+
+  // Carrega dados do animal
+  fetch(`/api/animais/${animalIdEdicao}`)
+    .then(r => r.json())
+    .then(dados => {
+      const a = dados.animal;
+      $('nome').value = a.nome || '';
+      $('especie').value = a.especie || '';
+      $('porte').value = a.porte || '';
+      $('idade').value = a.idade || '';
+      $('descricao').value = a.descricao || '';
+
+      // Mostra imagem atual se houver
+      if (a.imagem_url) {
+        previewImgTag.src = a.imagem_url;
+        previewImgTag.style.display = 'block';
+        previewPlaceholder.style.display = 'none';
+        uploadZone.style.display = 'none';
+        uploadPreview.classList.add('show');
+        $('upload-preview-thumb').src = a.imagem_url;
+        $('upload-preview-name').textContent = 'Imagem atual';
+        $('upload-preview-size').textContent = '';
+      }
+
+      updatePreview();
+    })
+    .catch(() => alert('Não foi possível carregar os dados do animal.'));
+}
+
+
+
 /* ── Formata tamanho do arquivo ── */
 function formatBytes(bytes) {
   if (bytes < 1024) return bytes + ' B';
@@ -195,7 +235,7 @@ $('animal-form').addEventListener('submit', async (e) => {
   if (!porte) { setErr('field-porte'); valid = false; }
   if (!idade) { setErr('field-idade'); valid = false; }
   if (!descricao) { setErr('field-descricao'); valid = false; }
-  if (!arquivoSelecionado) { setErr('field-foto'); valid = false; }
+  if (!arquivoSelecionado && !animalIdEdicao) { setErr('field-foto'); valid = false; }
 
   if (!valid) return;
 
@@ -214,51 +254,46 @@ $('animal-form').addEventListener('submit', async (e) => {
        ETAPA 1 — UPLOAD DA IMAGEM
        POST /api/upload  →  { url: "/uploads/xxxx.jpg" }
     ════════════════════════════════════════ */
-    $('btn-text').textContent = 'Enviando imagem...';
-    progressWrap.classList.add('show');
-    progressText.textContent = 'Enviando imagem...';
+  let urlRecebida = null;
 
-    const formData = new FormData();
-    formData.append('imagem', arquivoSelecionado);
+if (arquivoSelecionado) {
+  $('btn-text').textContent = 'Enviando imagem...';
+  progressWrap.classList.add('show');
+  progressText.textContent = 'Enviando imagem...';
 
-    // ── Upload real com progresso (XMLHttpRequest, pois fetch não expõe progress nativo) ──
-    const urlRecebida = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', '/api/upload');
+  const formData = new FormData();
+  formData.append('imagem', arquivoSelecionado);
 
-      xhr.upload.onprogress = (ev) => {
-        if (ev.lengthComputable) {
-          const pct = Math.round((ev.loaded / ev.total) * 100);
-          progressFill.style.width = pct + '%';
-          progressPct.textContent = pct + '%';
+  urlRecebida = await new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/upload');
+
+    xhr.upload.onprogress = (ev) => {
+      if (ev.lengthComputable) {
+        const pct = Math.round((ev.loaded / ev.total) * 100);
+        progressFill.style.width = pct + '%';
+        progressPct.textContent = pct + '%';
+      }
+    };
+
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          if (!data.success) { reject(new Error('Falha ao enviar a imagem.')); return; }
+          resolve(data.imagem_url);
+        } catch (err) {
+          reject(new Error('Resposta inválida do servidor de upload.'));
         }
-      };
+      } else {
+        reject(new Error('Falha ao enviar a imagem.'));
+      }
+    };
 
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          try {
-            const data = JSON.parse(xhr.responseText);
-
-            if (!data.success) {
-              reject(new Error('Falha ao enviar a imagem.'));
-              return;
-            }
-
-            resolve(data.imagem_url);
-
-          } catch (err) {
-            reject(new Error('Resposta inválida do servidor de upload.'));
-          }
-
-        } else {
-          reject(new Error('Falha ao enviar a imagem.'));
-        }
-      };
-
-      xhr.onerror = () => reject(new Error('Erro de conexão ao enviar a imagem.'));
-      xhr.send(formData);
-    });
-
+    xhr.onerror = () => reject(new Error('Erro de conexão ao enviar a imagem.'));
+    xhr.send(formData);
+  });
+}
     /* ════════════════════════════════════════
        ETAPA 2 — CADASTRO DO ANIMAL
        POST /api/animais
@@ -271,19 +306,16 @@ $('animal-form').addEventListener('submit', async (e) => {
     // administrador_id deve vir da sessão/token do admin logado
     const administrador_id = getAdminId();
 
-    const res = await fetch('/api/animais', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nome,
-        especie,
-        idade,
-        porte,
-        descricao,
-        imagem_url: urlRecebida,
-        administrador_id
-      })
-    });
+   const res = await fetch(animalIdEdicao ? `/api/animais/${animalIdEdicao}` : '/api/animais', {
+  method: animalIdEdicao ? 'PUT' : 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+  nome, especie, idade, porte, descricao,
+  imagem_url: urlRecebida || $('preview-img-tag').src || null,
+  administrador_id,
+  status: 'disponivel'
+})
+});
 
     if (!res.ok) {
       throw new Error('Falha ao cadastrar o animal.');
@@ -294,7 +326,10 @@ $('animal-form').addEventListener('submit', async (e) => {
     $('btn-text').textContent = '✓ Publicado!';
     btn.style.background = '#22c55e';
 
-    showToast('success', 'Animal cadastrado com sucesso!', `"${nome}" foi publicado na plataforma 🐾`);
+    showToast('success',
+  animalIdEdicao ? 'Animal atualizado!' : 'Animal cadastrado com sucesso!',
+  `"${nome}" foi ${animalIdEdicao ? 'atualizado' : 'publicado'} na plataforma 🐾`
+);
 
     setTimeout(() => { window.location.href = 'tela-admin.html'; }, 2200);
 

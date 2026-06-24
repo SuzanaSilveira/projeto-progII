@@ -80,17 +80,28 @@ const animalController = {
         }
     },
 
-    atualizar(req, res) {
-        const { id } = req.params;
-        const { nome, especie, idade, porte, descricao, imagem_url, status } = req.body;
-        try {
-            const result = db.prepare(`UPDATE animais SET nome = ?, especie = ?, idade = ?, porte = ?, descricao = ?, imagem_url = ?, status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`).run(nome, especie, idade, porte, descricao, imagem_url, status, id);
-            if (result.changes > 0) res.json({ success: true, message: 'Animal atualizado com sucesso!' });
-            else res.status(404).json({ success: false, message: 'Animal não encontrado!' });
-        } catch (error) {
-            res.status(500).json({ success: false, message: error.message });
+atualizar(req, res) {
+    const { id } = req.params;
+    const { nome, especie, idade, porte, descricao, imagem_url, status } = req.body;
+    
+    try {
+        const stmt = db.prepare(`
+            UPDATE animais 
+            SET nome = ?, especie = ?, idade = ?, porte = ?, descricao = ?, imagem_url = ?, status = ?
+            WHERE id = ?
+        `);
+        
+        const result = stmt.run(nome, especie, idade, porte, descricao, imagem_url, status || 'disponivel', id);
+        
+        if (result.changes > 0) {
+            res.json({ success: true, message: 'Animal atualizado com sucesso!' });
+        } else {
+            res.status(404).json({ success: false, message: 'Animal não encontrado!' });
         }
-    },
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+},
 
     atualizarStatus(req, res) {
         const { id } = req.params;
