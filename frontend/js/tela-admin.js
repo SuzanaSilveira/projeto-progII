@@ -185,7 +185,7 @@ function criarCard(animal) {
                      : `🐾 ${animal.especie}`;
 
   const idadeTexto = animal.idade != null
-    ? `${animal.idade} ano${animal.idade !== 1 ? 's' : ''}`
+  ? `${animal.idade}`
     : 'Idade não informada';
 
   const porteTexto = animal.porte
