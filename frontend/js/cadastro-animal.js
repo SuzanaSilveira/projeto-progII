@@ -313,8 +313,8 @@ $('animal-form').addEventListener('submit', async (e) => {
 
 /* ── ID do admin logado (placeholder até integrar sessão real) ── */
 function getAdminId() {
-  // return sessionStorage.getItem('adminId');
-  return 1;
+  const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+  return usuario.id || null;
 }
 
 /* ── Toast ── */

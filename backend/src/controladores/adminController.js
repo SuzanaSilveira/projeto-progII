@@ -5,19 +5,20 @@ const adminController = {
     
     // Listar todos os animais (admin vê todos, incluindo indisponíveis)
     listarTodosAnimais(req, res) {
-        try {
-            const animais = db.prepare(`
-                SELECT a.*, u.nome as administrador_nome 
-                FROM animais a
-                LEFT JOIN usuarios u ON a.administrador_id = u.id
-                ORDER BY a.created_at DESC
-            `).all();
-            
-            res.json(animais);
-        } catch (error) {
-            res.status(500).json({ erro: "Erro ao listar animais" });
-        }
-    },
+    try {
+        const animais = db.prepare(`
+            SELECT a.*, u.nome as administrador_nome 
+            FROM animais a
+            LEFT JOIN usuarios u ON a.administrador_id = u.id
+            WHERE a.administrador_id = ?
+            ORDER BY a.created_at DESC
+        `).all(req.usuario.id);
+        
+        res.json(animais);
+    } catch (error) {
+        res.status(500).json({ erro: "Erro ao listar animais" });
+    }
+},
     
     // Criar novo animal
     criarAnimal(req, res) {
