@@ -31,10 +31,13 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 const authRoutes = require('./rotas/authRoutes');
 const adminRoutes = require('./rotas/adminRoutes');
 const uploadRoutes = require('./rotas/uploadRoutes');
+const publicRoutes = require('./rotas/publicRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api', uploadRoutes);
+app.use('/api/animais', publicRoutes);
+
 
 //  Página inicial
 app.get('/', (req, res) => {

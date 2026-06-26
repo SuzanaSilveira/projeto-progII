@@ -70,7 +70,7 @@ if (animalIdEdicao) {
     $('idade').value = a.idade || '';
     $('descricao').value = a.descricao || '';
 
-    // 🔥 FOTO: se tiver imagem, mostra no preview
+    //FOTO: se tiver imagem, mostra no preview
     if (a.imagem_url) {
       // Preview do card grande (lado esquerdo)
       previewImgTag.src = a.imagem_url;
@@ -258,9 +258,6 @@ function showToast(type, title, text) {
 /* ════════════════════════════════════════════
    SUBMIT
 ════════════════════════════════════════════ */
-/* ════════════════════════════════════════════
-   SUBMIT
-════════════════════════════════════════════ */
 $('animal-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   let valid = true;
@@ -342,7 +339,7 @@ $('animal-form').addEventListener('submit', async (e) => {
       throw new Error('Você precisa estar logado como administrador.');
     }
 
-    // 🔥 CORREÇÃO: Mantém a imagem existente se não enviar uma nova
+    // Mantém a imagem existente se não enviar uma nova
     let imagemFinal = null;
     if (urlRecebida) {
       imagemFinal = urlRecebida;
