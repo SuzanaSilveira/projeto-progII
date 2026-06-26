@@ -7,19 +7,15 @@ const adminMiddleware = require('../middleware/adminMiddleware');
 // Todas as rotas de admin são protegidas pelo middleware
 router.use(adminMiddleware);
 
-// ===== ANIMAIS =====
-router.get('/animais', adminController.listarTodosAnimais);           // GET /api/admin/animais
-router.post('/animais', adminController.criarAnimal);                 // POST /api/admin/animais
-router.put('/animais/:id', adminController.atualizarAnimal);          // PUT /api/admin/animais/:id
-router.delete('/animais/:id', adminController.deletarAnimal);         // DELETE /api/admin/animais/:id
+// ===== ANIMAIS  =====
+router.get('/animais', adminController.listarTodosAnimais);
+router.get('/animais/:id', adminController.buscarAnimalPorId);
+router.post('/animais', adminController.criarAnimal);
+router.put('/animais/:id', adminController.atualizarAnimal);
+router.delete('/animais/:id', adminController.deletarAnimal);
 
-// ===== SOLICITAÇÕES =====
-router.get('/solicitacoes', adminController.listarTodasSolicitacoes); // GET /api/admin/solicitacoes
-router.get('/solicitacoes/status/:status', adminController.listarSolicitacoesPorStatus); // GET /api/admin/solicitacoes/status/pendente
-router.put('/solicitacoes/:id/status', adminController.atualizarStatusSolicitacao); // PUT /api/admin/solicitacoes/:id/status
-
-// ===== DASHBOARD =====
-router.get('/dashboard/animais/count', adminController.contarAnimaisPorStatus); // GET /api/admin/dashboard/animais/count
-router.get('/dashboard/solicitacoes/count', adminController.contarSolicitacoesPorStatus); // GET /api/admin/dashboard/solicitacoes/count
+// ===== CONTATOS  =====
+router.get('/contatos', adminController.listarTodosContatos);
+router.patch('/contatos/:id/status', adminController.atualizarStatusContato);
 
 module.exports = router;

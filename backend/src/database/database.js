@@ -30,16 +30,6 @@ db.exec(`
         FOREIGN KEY (administrador_id) REFERENCES usuarios(id)
     );
 
-    CREATE TABLE IF NOT EXISTS preferencias (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        usuario_id INTEGER NOT NULL,
-        especie_pref TEXT,
-        porte_pref TEXT,
-        idade_min INTEGER,
-        idade_max INTEGER,
-        FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
-    );
-
     CREATE TABLE IF NOT EXISTS contatos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         remetente_id INTEGER NOT NULL,
@@ -51,16 +41,6 @@ db.exec(`
         FOREIGN KEY (animal_id) REFERENCES animais(id)
     );
 
-    -- 🆕 Tabela para recuperação de senha (opcional, mas útil)
-    CREATE TABLE IF NOT EXISTS recuperacao_senha (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        usuario_id INTEGER NOT NULL,
-        token TEXT NOT NULL,
-        expira_em DATETIME NOT NULL,
-        usado INTEGER DEFAULT 0,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
-    );
 `);
 
 console.log('✅ Banco de dados inicializado com sucesso!');

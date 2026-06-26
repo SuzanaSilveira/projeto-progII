@@ -1,4 +1,3 @@
-
 /* ════════════════════════════════════════════
    ESTADO DO ARQUIVO SELECIONADO
 ════════════════════════════════════════════ */
@@ -18,6 +17,81 @@ const previewImgArea = $('preview-img-area');
 const previewImgTag = $('preview-img-tag');
 const previewPlaceholder = $('preview-img-placeholder');
 const speciesBadgeEl = $('preview-species-badge');
+const animalIdEdicao = new URLSearchParams(window.location.search).get('id');
+
+/* ════════════════════════════════════════════
+   FUNÇÕES AUXILIARES
+════════════════════════════════════════════ */
+function getAdminId() {
+  const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+  return usuario.id || null;
+}
+
+function getAdminEmail() {
+  const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+  return usuario.email || '';
+}
+
+function getAuthToken() {
+  const id = getAdminId();
+  const email = getAdminEmail();
+  if (!id || !email) return null;
+  return btoa(`${id}:${email}`);
+}
+
+/* ════════════════════════════════════════════
+   CARREGAR DADOS PARA EDIÇÃO
+════════════════════════════════════════════ */
+if (animalIdEdicao) {
+  document.querySelector('.form-title').innerHTML = 'Editar<br>animal';
+  document.querySelector('.form-subtitle').textContent = 'Atualize os dados do animal na plataforma.';
+  $('btn-text').textContent = 'Salvar alterações';
+
+  const token = getAuthToken();
+  if (!token) {
+    alert('Você precisa estar logado como administrador.');
+    window.location.href = 'login.html';
+  }
+
+  fetch(`/api/admin/animais/${animalIdEdicao}`, {
+    headers: { 'Authorization': token }
+  })
+  .then(r => {
+    if (!r.ok) throw new Error('Erro ao carregar dados');
+    return r.json();
+  })
+  .then(dados => {
+    const a = dados.animal || dados;
+
+    // Preenche campos
+    $('nome').value = a.nome || '';
+    $('especie').value = a.especie || '';
+    $('porte').value = a.porte || '';
+    $('idade').value = a.idade || '';
+    $('descricao').value = a.descricao || '';
+
+    //FOTO: se tiver imagem, mostra no preview
+    if (a.imagem_url) {
+      // Preview do card grande (lado esquerdo)
+      previewImgTag.src = a.imagem_url;
+      previewImgTag.style.display = 'block';
+      previewPlaceholder.style.display = 'none';
+
+      // Preview do upload (mini card)
+      previewThumb.src = a.imagem_url;
+      previewName.textContent = 'Imagem atual';
+      previewSize.textContent = '';
+      uploadPreview.classList.add('show');
+      uploadZone.style.display = 'none';
+    }
+
+    updatePreview();
+  })
+  .catch((err) => {
+    console.error(err);
+    alert('Não foi possível carregar os dados do animal.');
+  });
+}
 
 /* ── Formata tamanho do arquivo ── */
 function formatBytes(bytes) {
@@ -26,18 +100,16 @@ function formatBytes(bytes) {
   return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 }
 
-/* ── Processa o arquivo selecionado (input ou drag&drop) ── */
+/* ── Processa o arquivo selecionado ── */
 function handleFile(file) {
   if (!file) return;
 
-  // valida tipo
   const tiposPermitidos = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
   if (!tiposPermitidos.includes(file.type)) {
     alert('Formato não suportado. Envie uma imagem PNG, JPG ou WEBP.');
     return;
   }
 
-  // valida tamanho (5MB)
   if (file.size > 5 * 1024 * 1024) {
     alert('A imagem deve ter no máximo 5MB.');
     return;
@@ -46,19 +118,18 @@ function handleFile(file) {
   arquivoSelecionado = file;
   clearErr('field-foto');
 
-  // lê o arquivo para gerar preview local (FileReader)
   const reader = new FileReader();
   reader.onload = (e) => {
     const dataUrl = e.target.result;
 
-    // preview dentro do mini-card de upload
+    // Preview do upload
     previewThumb.src = dataUrl;
     previewName.textContent = file.name;
     previewSize.textContent = formatBytes(file.size);
     uploadPreview.classList.add('show');
     uploadZone.style.display = 'none';
 
-    // preview dentro do card grande (lado esquerdo)
+    // Preview do card grande
     previewImgTag.src = dataUrl;
     previewImgTag.style.display = 'block';
     previewPlaceholder.style.display = 'none';
@@ -68,7 +139,6 @@ function handleFile(file) {
   updatePreview();
 }
 
-/* clique no input padrão */
 fotoInput.addEventListener('change', (e) => {
   const file = e.target.files[0];
   handleFile(file);
@@ -90,7 +160,6 @@ fotoInput.addEventListener('change', (e) => {
 uploadZone.addEventListener('drop', (e) => {
   const file = e.dataTransfer.files[0];
   if (file) {
-    // sincroniza com o input para o submit funcionar normalmente
     const dt = new DataTransfer();
     dt.items.add(file);
     fotoInput.files = dt.files;
@@ -98,7 +167,6 @@ uploadZone.addEventListener('drop', (e) => {
   }
 });
 
-/* remover arquivo selecionado */
 removeBtn.addEventListener('click', () => {
   arquivoSelecionado = null;
   fotoInput.value = '';
@@ -113,7 +181,7 @@ removeBtn.addEventListener('click', () => {
 });
 
 /* ════════════════════════════════════════════
-   PREVIEW AO VIVO (card da esquerda)
+   PREVIEW AO VIVO
 ════════════════════════════════════════════ */
 function updatePreview() {
   const nome = $('nome').value.trim();
@@ -128,11 +196,11 @@ function updatePreview() {
     ? 'color:var(--dark);font-style:normal;font-size:1.35rem'
     : 'color:#C4C4C4;font-style:italic;font-size:1rem';
 
-  // Tags
+  // Tags (espécie, porte, idade)
   const tags = [];
   if (especie) tags.push(especie === 'cachorro' ? '🐶 Cachorro' : '🐱 Gato');
   if (porte) tags.push(porte + ' porte');
-  if (idade) tags.push(idade);
+  if (idade) tags.push(idade); // ← Mostra exatamente como foi digitado
 
   const previewTags = $('preview-tags');
   if (tags.length) {
@@ -151,7 +219,7 @@ function updatePreview() {
     ? 'color:var(--muted);font-style:normal'
     : 'color:#D1D5DB;font-style:italic';
 
-  // Badge de espécie sobre a foto
+  // Badge de espécie
   if (especie) {
     speciesBadgeEl.textContent = especie === 'cachorro' ? '🐶 Cachorro' : '🐱 Gato';
     speciesBadgeEl.style.display = 'block';
@@ -160,7 +228,7 @@ function updatePreview() {
   }
 }
 
-// Ouvintes nos campos de texto
+// Ouvintes
 ['nome', 'especie', 'porte', 'idade', 'descricao'].forEach(id => {
   $(id).addEventListener('input', updatePreview);
   $(id).addEventListener('change', updatePreview);
@@ -177,8 +245,18 @@ function clearErr(id) { $(id).classList.remove('has-error'); }
   $(id).addEventListener('change', () => clearErr('field-' + id));
 });
 
+/* ── Toast ── */
+function showToast(type, title, text) {
+  const toast = $('toast');
+  toast.classList.toggle('error', type === 'error');
+  $('toast-title').textContent = title;
+  $('toast-animal-name').textContent = text;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4000);
+}
+
 /* ════════════════════════════════════════════
-   SUBMIT — UPLOAD + CADASTRO (2 ETAPAS)
+   SUBMIT
 ════════════════════════════════════════════ */
 $('animal-form').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -195,7 +273,7 @@ $('animal-form').addEventListener('submit', async (e) => {
   if (!porte) { setErr('field-porte'); valid = false; }
   if (!idade) { setErr('field-idade'); valid = false; }
   if (!descricao) { setErr('field-descricao'); valid = false; }
-  if (!arquivoSelecionado) { setErr('field-foto'); valid = false; }
+  if (!arquivoSelecionado && !animalIdEdicao) { setErr('field-foto'); valid = false; }
 
   if (!valid) return;
 
@@ -210,119 +288,113 @@ $('animal-form').addEventListener('submit', async (e) => {
   const progressText = $('upload-progress-text');
 
   try {
-    /* ════════════════════════════════════════
-       ETAPA 1 — UPLOAD DA IMAGEM
-       POST /api/upload  →  { url: "/uploads/xxxx.jpg" }
-    ════════════════════════════════════════ */
-    $('btn-text').textContent = 'Enviando imagem...';
-    progressWrap.classList.add('show');
-    progressText.textContent = 'Enviando imagem...';
+    let urlRecebida = null;
 
-    const formData = new FormData();
-    formData.append('imagem', arquivoSelecionado);
+    if (arquivoSelecionado) {
+      $('btn-text').textContent = 'Enviando imagem...';
+      progressWrap.classList.add('show');
+      progressText.textContent = 'Enviando imagem...';
 
-    // ── Upload real com progresso (XMLHttpRequest, pois fetch não expõe progress nativo) ──
-    const urlRecebida = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', '/api/upload');
+      const formData = new FormData();
+      formData.append('imagem', arquivoSelecionado);
 
-      xhr.upload.onprogress = (ev) => {
-        if (ev.lengthComputable) {
-          const pct = Math.round((ev.loaded / ev.total) * 100);
-          progressFill.style.width = pct + '%';
-          progressPct.textContent = pct + '%';
-        }
-      };
+      urlRecebida = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/upload');
 
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          try {
-            const data = JSON.parse(xhr.responseText);
-
-            if (!data.success) {
-              reject(new Error('Falha ao enviar a imagem.'));
-              return;
-            }
-
-            resolve(data.imagem_url);
-
-          } catch (err) {
-            reject(new Error('Resposta inválida do servidor de upload.'));
+        xhr.upload.onprogress = (ev) => {
+          if (ev.lengthComputable) {
+            const pct = Math.round((ev.loaded / ev.total) * 100);
+            progressFill.style.width = pct + '%';
+            progressPct.textContent = pct + '%';
           }
+        };
 
-        } else {
-          reject(new Error('Falha ao enviar a imagem.'));
-        }
-      };
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              const data = JSON.parse(xhr.responseText);
+              if (!data.success) { reject(new Error('Falha ao enviar a imagem.')); return; }
+              resolve(data.imagem_url);
+            } catch (err) {
+              reject(new Error('Resposta inválida do servidor de upload.'));
+            }
+          } else {
+            reject(new Error('Falha ao enviar a imagem.'));
+          }
+        };
 
-      xhr.onerror = () => reject(new Error('Erro de conexão ao enviar a imagem.'));
-      xhr.send(formData);
-    });
+        xhr.onerror = () => reject(new Error('Erro de conexão ao enviar a imagem.'));
+        xhr.send(formData);
+      });
+    }
 
-    /* ════════════════════════════════════════
-       ETAPA 2 — CADASTRO DO ANIMAL
-       POST /api/animais
-    ════════════════════════════════════════ */
-    $('btn-text').textContent = 'Publicando...';
+    $('btn-text').textContent = animalIdEdicao ? 'Salvando alterações...' : 'Publicando...';
     progressText.textContent = 'Salvando cadastro...';
     progressFill.style.width = '100%';
     progressPct.textContent = '100%';
 
-    // administrador_id deve vir da sessão/token do admin logado
-    const administrador_id = getAdminId();
+    const token = getAuthToken();
+    if (!token) {
+      throw new Error('Você precisa estar logado como administrador.');
+    }
 
-    const res = await fetch('/api/animais', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    // Mantém a imagem existente se não enviar uma nova
+    let imagemFinal = null;
+    if (urlRecebida) {
+      imagemFinal = urlRecebida;
+    } else if (animalIdEdicao) {
+      // Se está editando e não enviou nova foto, mantém a atual
+      const imgTag = document.getElementById('preview-img-tag');
+      if (imgTag && imgTag.src && !imgTag.src.includes('blob:')) {
+        imagemFinal = imgTag.src;
+      }
+    }
+
+    const url = animalIdEdicao ? `/api/admin/animais/${animalIdEdicao}` : '/api/admin/animais';
+    const method = animalIdEdicao ? 'PUT' : 'POST';
+
+    const res = await fetch(url, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
       body: JSON.stringify({
         nome,
         especie,
-        idade,
+        idade: idade,
         porte,
         descricao,
-        imagem_url: urlRecebida,
-        administrador_id
+        imagem_url: imagemFinal,
+        status: 'disponivel'
       })
     });
 
     if (!res.ok) {
-      throw new Error('Falha ao cadastrar o animal.');
+      const err = await res.json();
+      throw new Error(err.erro || 'Falha ao salvar o animal.');
     }
 
-    /* ── SUCESSO ── */
     $('spinner').style.display = 'none';
-    $('btn-text').textContent = '✓ Publicado!';
+    $('btn-text').textContent = '✓ Sucesso!';
     btn.style.background = '#22c55e';
 
-    showToast('success', 'Animal cadastrado com sucesso!', `"${nome}" foi publicado na plataforma 🐾`);
+    showToast('success',
+      animalIdEdicao ? 'Animal atualizado!' : 'Animal cadastrado com sucesso!',
+      `"${nome}" foi ${animalIdEdicao ? 'atualizado' : 'publicado'} na plataforma 🐾`
+    );
 
     setTimeout(() => { window.location.href = 'tela-admin.html'; }, 2200);
 
   } catch (err) {
-    /* ── ERRO ── */
     console.error(err);
     progressWrap.classList.remove('show');
     btn.disabled = false;
     $('spinner').style.display = 'none';
     $('btn-icon').style.display = '';
-    $('btn-text').textContent = 'Publicar animal';
+    $('btn-text').textContent = animalIdEdicao ? 'Salvar alterações' : 'Publicar animal';
 
-    showToast('error', 'Algo deu errado', err.message || 'Não foi possível concluir o cadastro. Tente novamente.');
+    showToast('error', 'Algo deu errado', err.message || 'Não foi possível concluir a operação. Tente novamente.');
   }
 });
-
-/* ── ID do admin logado (placeholder até integrar sessão real) ── */
-function getAdminId() {
-  // return sessionStorage.getItem('adminId');
-  return 1;
-}
-
-/* ── Toast ── */
-function showToast(type, title, text) {
-  const toast = $('toast');
-  toast.classList.toggle('error', type === 'error');
-  $('toast-title').textContent = title;
-  $('toast-animal-name').textContent = text;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 4000);
-}

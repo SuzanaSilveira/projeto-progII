@@ -1,103 +1,81 @@
 const express = require('express');
 const cors = require('cors');
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
 const path = require('path');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-try {
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-    // Middlewares
-    app.use(cors());
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
+//  CAMINHOS DO FRONTEND
+const frontendPath = path.join(__dirname, '../../frontend/pages');
+const cssPath = path.join(__dirname, '../../frontend/css');
+const jsPath = path.join(__dirname, '../../frontend/js');
 
-    // Frontend (CSS, JS, HTML, imagens...)
-    app.use(express.static(path.join(__dirname, '../../frontend')));
+console.log(' Frontend:', frontendPath);
+console.log(' CSS:', cssPath);
+console.log(' JS:', jsPath);
 
-    // Uploads
-    app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// Servir arquivos estáticos
+app.use('/css', express.static(cssPath));
+app.use('/js', express.static(jsPath));
+app.use(express.static(frontendPath));
 
-    // Swagger
-    const options = {
-        definition: {
-            openapi: '3.0.0',
-            info: {
-                title: 'API Amigo Fiel',
-                version: '1.0.0',
-                description: 'API para gerenciamento de usuários e animais'
-            }
-        },
-        apis: [
-            path.join(__dirname, 'rotas', 'Animal.js'),
-            path.join(__dirname, 'rotas', 'Usuario.js')
-        ]
-    };
+//  Uploads
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-    const specs = swaggerJsdoc(options);
+//  ROTAS DA API (DEVEM VIR ANTES DA ROTA CURINGA)
+const authRoutes = require('./rotas/authRoutes');
+const adminRoutes = require('./rotas/adminRoutes');
+const uploadRoutes = require('./rotas/uploadRoutes');
+const publicRoutes = require('./rotas/publicRoutes');
 
-    app.use(
-        '/api-docs',
-        swaggerUi.serve,
-        swaggerUi.setup(specs)
-    );
+app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api', uploadRoutes);
+app.use('/api/animais', publicRoutes);
 
-    // Rotas
-    const usuariosRoutes = require('./rotas/Usuario');
-    const animaisRoutes = require('./rotas/Animal');
-    const authRoutes = require('./rotas/authRoutes');
-    const adminRoutes = require('./rotas/adminRoutes');
-    const uploadRoutes = require('./rotas/uploadRoutes');
 
-    app.use('/api/usuarios', usuariosRoutes);
-    app.use('/api/animais', animaisRoutes);
-    app.use('/api/auth', authRoutes);
-    app.use('/api/admin', adminRoutes);
-    app.use('/api', uploadRoutes);
-
-    // Página inicial
-    app.get('/', (req, res) => {
-        res.sendFile(path.join(__dirname, '../../frontend/pages/index.html'));
-    });
-
-    // Middleware global de erro
-    app.use((err, req, res, next) => {
-        console.error('Erro:', err.message);
-
-        if (err.message === 'Apenas imagens são permitidas!') {
-            return res.status(400).json({ erro: err.message });
-        }
-
-        if (err.code === 'LIMIT_FILE_SIZE') {
-            return res.status(400).json({ erro: 'Arquivo muito grande! Máximo 5MB' });
-        }
-
-        res.status(500).json({
-            erro: 'Erro interno no servidor'
-        });
-    });
-
-    // Iniciar servidor
-    app.listen(PORT, () => {
-        console.log(`Servidor rodando: http://localhost:${PORT}`);
-        console.log(`Página inicial: http://localhost:${PORT}`);
-        console.log(`Swagger: http://localhost:${PORT}/api-docs`);
-        console.log(`Auth API: http://localhost:${PORT}/api/auth`);
-        console.log(`Upload API: http://localhost:${PORT}/api/upload`);
-    });
-
-} catch (erro) {
-    console.error('Falha ao iniciar servidor:');
-    console.error(erro.message);
-}
-
-process.on('uncaughtException', (erro) => {
-    console.error('Erro não tratado:', erro.message);
+//  Página inicial
+app.get('/', (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
-process.on('unhandledRejection', (erro) => {
-    console.error('Promessa rejeitada:', erro);
+//  ROTA CURINGA: SÓ PARA PÁGINAS HTML (DEIXA A API EM PAZ)
+app.get('*.html', (req, res) => {
+    const fileName = path.basename(req.path);
+    res.sendFile(path.join(frontendPath, fileName));
+});
+
+//  ROTA CURINGA: REDIRECIONA QUALQUER OUTRA COISA PARA O INDEX (SOMENTE SE FOR PÁGINA)
+app.get('*', (req, res) => {
+    // Se não for uma requisição de API, envia o index.html
+    if (!req.path.startsWith('/api/') && !req.path.startsWith('/css/') && !req.path.startsWith('/js/') && !req.path.startsWith('/uploads/')) {
+        res.sendFile(path.join(frontendPath, 'index.html'));
+    } else {
+        res.status(404).json({ erro: 'Recurso não encontrado' });
+    }
+});
+
+// Middleware de erro
+app.use((err, req, res, next) => {
+    console.error(' Erro:', err.message);
+    if (err.message === 'Apenas imagens são permitidas!') {
+        return res.status(400).json({ erro: err.message });
+    }
+    if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ erro: 'Arquivo muito grande! Máximo 5MB' });
+    }
+    res.status(500).json({ erro: 'Erro interno no servidor' });
+});
+
+app.listen(PORT, () => {
+    console.log(` Servidor rodando: http://localhost:${PORT}`);
+    console.log(` Frontend: ${frontendPath}`);
+    console.log(` Auth API: http://localhost:${PORT}/api/auth`);
+    console.log(` Upload: http://localhost:${PORT}/api/upload`);
+    console.log(` Admin: http://localhost:${PORT}/api/admin`);
 });
