@@ -134,6 +134,50 @@ buscarAnimalPorId(req, res) {
         res.status(500).json({ erro: "Erro ao buscar animal" });
     }
 },
+    listarTodosContatos(req, res) {
+    try {
+        const contatos = db.prepare(`
+            SELECT c.*, 
+                   a.nome as animal_nome,
+                   u.nome as adotante_nome,
+                   u.email as adotante_email,
+                   u.telefone as adotante_telefone
+            FROM contatos c
+            JOIN animais a ON c.animal_id = a.id
+            JOIN usuarios u ON c.remetente_id = u.id
+            WHERE a.administrador_id = ?
+            ORDER BY c.data_contato DESC
+        `).all(req.usuario.id);
+        
+        res.json({ success: true, contatos });
+    } catch (error) {
+        console.error('Erro ao listar contatos:', error);
+        res.status(500).json({ erro: "Erro ao listar contatos" });
+    }
+},
+
+// Atualizar status do contato
+    atualizarStatusContato(req, res) {
+    const { id } = req.params;
+    const { status } = req.body;
+    
+    if (!['pendente', 'aprovado', 'recusado', 'visto'].includes(status)) {
+        return res.status(400).json({ erro: "Status inválido" });
+    }
+    
+    try {
+        const result = db.prepare('UPDATE contatos SET status = ? WHERE id = ?').run(status, id);
+        
+        if (result.changes === 0) {
+            return res.status(404).json({ erro: "Contato não encontrado" });
+        }
+        
+        res.json({ success: true, mensagem: `Status atualizado para ${status}` });
+    } catch (error) {
+        console.error('Erro ao atualizar status:', error);
+        res.status(500).json({ erro: "Erro ao atualizar status" });
+    }
+},
 };
 
 module.exports = adminController;

@@ -14,4 +14,8 @@ router.post('/animais', adminController.criarAnimal);
 router.put('/animais/:id', adminController.atualizarAnimal);
 router.delete('/animais/:id', adminController.deletarAnimal);
 
+// ===== CONTATOS  =====
+router.get('/contatos', adminController.listarTodosContatos);
+router.patch('/contatos/:id/status', adminController.atualizarStatusContato);
+
 module.exports = router;

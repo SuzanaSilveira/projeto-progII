@@ -7,18 +7,25 @@ let modalEmail = '', modalNome = '', modalAnimal = '';
 ════════════════════════════════════════ */
 async function carregarInteresses() {
   try {
-    const res = await fetch('/api/animais/contatos/todos');
+    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+    const token = btoa(`${usuario.id}:${usuario.email}`);
+
+    const res = await fetch('/api/admin/contatos', {
+      headers: {
+        'Authorization': token
+      }
+    });
+    
     if (!res.ok) throw new Error(`Erro ${res.status}`);
     const dados = await res.json();
 
     todosInteresses = dados.contatos.map(c => ({
       id: c.id,
-      nome: c.remetente_nome || 'Usuário desconhecido',
-      email: c.remetente_email || '',
-      avatar: iniciais(c.remetente_nome),
+      nome: c.adotante_nome || 'Usuário desconhecido',
+      email: c.adotante_email || '',
+      avatar: iniciais(c.adotante_nome),
       av: corAvatar(c.id),
       animal: c.animal_nome || 'Animal',
-      especie: formatarEspecie(c.animal_especie, c.animal_raca),
       data: formatarData(c.data_contato),
       status: c.status || 'pendente',
       msg: c.mensagem || '',
@@ -27,6 +34,7 @@ async function carregarInteresses() {
     updateStats();
     renderCards(currentFilter);
   } catch (e) {
+    console.error(e);
     document.getElementById('cards-list').innerHTML = `
       <div class="empty-state">
         <p>Não foi possível carregar os interesses.<br><small>${e.message}</small></p>
@@ -141,12 +149,18 @@ function renderCards(filter) {
 ════════════════════════════════════════ */
 async function marcarVisto(id) {
   try {
-    await fetch(`/api/animais/contatos/${id}/status`, {
+    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+    const token = btoa(`${usuario.id}:${usuario.email}`);
+
+    await fetch(`/api/admin/contatos/${id}/status`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
       body: JSON.stringify({ status: 'visto' })
     });
-  } catch (_) { /* falha silenciosa — atualiza a UI de qualquer forma */ }
+  } catch (_) { /* falha silenciosa */ }
 
   const item = todosInteresses.find(i => i.id === id);
   if (item) item.status = 'visto';
