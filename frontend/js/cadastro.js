@@ -146,7 +146,7 @@ $('register-form').addEventListener('submit', async (e) => {
 
 
     // INSERÇÃO NO BANCO !!!!!!!!!!!!!
-    const res = await fetch('/api/usuarios/cadastro', {
+    const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
