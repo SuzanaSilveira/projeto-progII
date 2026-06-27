@@ -11,7 +11,6 @@ db.exec(`
         email TEXT UNIQUE NOT NULL,
         senha TEXT NOT NULL,
         telefone TEXT,
-        cep TEXT,
         tipo TEXT DEFAULT 'adotante',
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
