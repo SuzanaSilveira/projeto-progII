@@ -15,7 +15,7 @@ async function carregarInteresses() {
         'Authorization': token
       }
     });
-    
+
     if (!res.ok) throw new Error(`Erro ${res.status}`);
     const dados = await res.json();
 
@@ -29,6 +29,7 @@ async function carregarInteresses() {
       data: formatarData(c.data_contato),
       status: c.status || 'pendente',
       msg: c.mensagem || '',
+      especie: formatarEspecie(c.animal_especie),
     }));
 
     updateStats();
@@ -57,7 +58,8 @@ function corAvatar(id) {
 
 function formatarEspecie(especie, raca) {
   if (!especie) return '';
-  return raca ? `${especie} · ${raca}` : especie;
+  if (!raca || raca === 'undefined') return especie;
+  return `${especie} · ${raca}`;
 }
 
 function formatarData(iso) {
