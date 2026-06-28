@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meus Favoritos — Amigo Fiel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="/css/favoritos.css">
+  <script src="/js/favoritos.js" defer></script>
+
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     HEADER
+═══════════════════════════════════════ -->
+<header>
+  <a href="home.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M4.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM9 7.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM12 22c-4.97 0-9-2.69-9-6 0-1.94 1.24-3.67 3.19-4.84C7.14 10.42 9.48 9.75 12 9.75s4.86.67 5.81 1.41C19.76 12.33 21 14.06 21 16c0 3.31-4.03 6-9 6z"/></svg>
+    </div>
+    <span class="logo-text">Amigo Fiel</span>
+  </a>
+
+  <nav>
+    <a href="/pages/home.html">Início</a>
+    <a href="/pages/home.html#animais-section">Animais</a>
+    <a href="/pages/favoritos.html" class="active">Meus favoritos</a>
+    <a href="#footer">Sobre</a>
+  </nav>
+
+  <div class="header-right">
+    <div class="user-avatar" tabindex="0">
+      <div class="avatar-circle">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <div class="avatar-dropdown">
+        <div class="dropdown-header">
+          <strong id="user-name-dropdown">Usuário</strong>
+          <span id="user-email-dropdown">usuario@email.com</span>
+        </div>
+        <a href="#" onclick="logout(); return false;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sair
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+
+<!-- ═══════════════════════════════════════
+     BREADCRUMB
+═══════════════════════════════════════ -->
+<div class="breadcrumb">
+  <a href="home.html">Início</a>
+  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  <span>Meus favoritos</span>
+</div>
+
+<!-- ═══════════════════════════════════════
+     CONTEÚDO
+═══════════════════════════════════════ -->
+<main>
+  <div class="page-header">
+    <div class="page-eyebrow">Sua lista</div>
+    <h1 class="page-title">Meus favoritos</h1>
+    <p class="page-sub">Animais que você salvou para não perder de vista.</p>
+  </div>
+
+  <section class="results-section">
+    <div class="animals-grid" id="favoritos-grid"></div>
+  </section>
+</main>
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════ -->
+<footer id="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="home.html" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24"><path d="M4.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM9 7.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM12 22c-4.97 0-9-2.69-9-6 0-1.94 1.24-3.67 3.19-4.84C7.14 10.42 9.48 9.75 12 9.75s4.86.67 5.81 1.41C19.76 12.33 21 14.06 21 16c0 3.31-4.03 6-9 6z"/></svg>
+        </div>
+        <span class="logo-text">Amigo Fiel</span>
+      </a>
+      <p>Conectamos animais que precisam de amor a famílias que têm carinho para dar.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Navegação</h5>
+      <a href="home.html">Início</a>
+      <a href="home.html#animais-section">Animais</a>
+      <a href="favoritos.html">Meus favoritos</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Amigo Fiel. Todos os direitos reservados.</span>
+  </div>
+</footer>
+
+</body>
+</html>
