@@ -32,12 +32,13 @@ const authRoutes = require('./rotas/authRoutes');
 const adminRoutes = require('./rotas/adminRoutes');
 const uploadRoutes = require('./rotas/uploadRoutes');
 const publicRoutes = require('./rotas/publicRoutes');
+const favoritoRoutes = require('./rotas/favoritoRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api', uploadRoutes);
 app.use('/api/animais', publicRoutes);
-
+app.use('/api/favoritos', favoritoRoutes);
 
 //  Página inicial
 app.get('/', (req, res) => {
@@ -79,3 +80,4 @@ app.listen(PORT, () => {
     console.log(` Upload: http://localhost:${PORT}/api/upload`);
     console.log(` Admin: http://localhost:${PORT}/api/admin`);
 });
+

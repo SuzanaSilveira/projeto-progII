@@ -3,7 +3,6 @@ const path = require('path');
 
 const db = new Database(path.join(__dirname, 'amigofiel.db'));
 
-// Criar tabelas
 db.exec(`
     CREATE TABLE IF NOT EXISTS usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,6 +39,26 @@ db.exec(`
         FOREIGN KEY (animal_id) REFERENCES animais(id)
     );
 
+    CREATE TABLE IF NOT EXISTS favoritos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario_id INTEGER NOT NULL,
+        animal_id INTEGER NOT NULL,
+        data_favoritado DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+        FOREIGN KEY (animal_id) REFERENCES animais(id),
+        UNIQUE(usuario_id, animal_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS notificacoes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario_id INTEGER NOT NULL,
+        titulo TEXT NOT NULL,
+        mensagem TEXT NOT NULL,
+        tipo TEXT DEFAULT 'info',
+        lida INTEGER DEFAULT 0,
+        data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+    );
 `);
 
 console.log('✅ Banco de dados inicializado com sucesso!');

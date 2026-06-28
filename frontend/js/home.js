@@ -18,7 +18,6 @@ const AVATARS_SVG = {
   }
 };
 
-/* Detecta o avatar pelo campo especie vindo do banco */
 function getAvatar(especie) {
   const e = (especie || '').toLowerCase();
   if (e.includes('cachorro') || e.includes('cão') || e.includes('cao')) return AVATARS_SVG.cachorro;
@@ -26,7 +25,6 @@ function getAvatar(especie) {
   return AVATARS_SVG.outro;
 }
 
-/* Classifica idade em grupo para filtro */
 function classificarIdade(idade) {
   if (!idade) return 'adulto';
   const n = parseFloat(String(idade));
@@ -39,12 +37,13 @@ function classificarIdade(idade) {
 let ANIMALS = [];
 let currentResults = [];
 
+/* IDs dos animais favoritados pelo usuário logado */
+let favoritosIds = new Set();
+
 /* ════════════════════════════════════════════
    INICIALIZAÇÃO
 ════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', async () => {
-
-  /* Usuário logado */
   const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
   const nome = usuario.nome || 'Visitante';
   const email = usuario.email || '';
@@ -53,12 +52,66 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('user-name-dropdown').textContent = nome;
   document.getElementById('user-email-dropdown').textContent = email;
 
-  /* Carrega animais do banco */
-  await carregarAnimais();
+  /* Carrega favoritos antes dos cards para já renderizar com estado correto */
+  if (usuario.id) await carregarFavoritos(usuario.id);
 
+  await carregarAnimais();
   initScrollReveal();
   setupSearchAndFilters();
 });
+
+/* ════════════════════════════════════════════
+   FAVORITOS — busca quais animais já são favoritados
+════════════════════════════════════════════ */
+async function carregarFavoritos(usuarioId) {
+  try {
+    const res = await fetch(`/api/favoritos/usuario/${usuarioId}`);
+    if (!res.ok) return;
+    const dados = await res.json();
+    /* Monta um Set com os IDs para consulta O(1) */
+    favoritosIds = new Set((dados.favoritos || []).map(f => f.animal_id));
+  } catch (e) {
+    /* Silencioso — favoritos não são críticos para a página */
+    console.warn('Não foi possível carregar favoritos:', e.message);
+  }
+}
+
+/* Alterna favorito ao clicar no coração */
+async function toggleFavorito(event, animalId) {
+  /* Impede que o clique no coração abra os detalhes do card */
+  event.stopPropagation();
+
+  const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+  if (!usuario.id) {
+    alert('Faça login para favoritar animais.');
+    return;
+  }
+
+  const btn = document.getElementById(`fav-btn-${animalId}`);
+  const jaFavoritado = favoritosIds.has(animalId);
+
+  try {
+    if (jaFavoritado) {
+      /* Remove favorito */
+      await fetch(`/api/favoritos/${usuario.id}/${animalId}`, { method: 'DELETE' });
+      favoritosIds.delete(animalId);
+      btn.classList.remove('favoritado');
+      btn.title = 'Adicionar aos favoritos';
+    } else {
+      /* Adiciona favorito */
+      await fetch('/api/favoritos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuario_id: usuario.id, animal_id: animalId })
+      });
+      favoritosIds.add(animalId);
+      btn.classList.add('favoritado');
+      btn.title = 'Remover dos favoritos';
+    }
+  } catch (e) {
+    console.error('Erro ao atualizar favorito:', e.message);
+  }
+}
 
 /* ════════════════════════════════════════════
    BUSCAR ANIMAIS DA API
@@ -66,7 +119,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function carregarAnimais() {
   const grid = document.getElementById('animals-grid');
 
-  /* Skeleton enquanto carrega */
   grid.innerHTML = `
     <div class="card-skeleton"></div>
     <div class="card-skeleton"></div>
@@ -81,7 +133,6 @@ async function carregarAnimais() {
     const dados = await res.json();
     ANIMALS = dados.animais || [];
 
-    /* Normaliza campo idadeGrupo para filtros */
     ANIMALS = ANIMALS.map(a => ({
       ...a,
       idadeGrupo: classificarIdade(a.idade)
@@ -130,7 +181,6 @@ function renderAnimals(list) {
   grid.innerHTML = list.map(animal => {
     const av = getAvatar(animal.especie);
 
-    /* Imagem: foto real do banco ou SVG de fallback */
     const imgHtml = animal.imagem_url
       ? `<img src="${animal.imagem_url}" alt="Foto de ${animal.nome}" style="width:100%;height:100%;object-fit:cover;" onerror="this.outerHTML='${av.svg.replace(/'/g, "\\'")}'">`
       : av.svg;
@@ -139,12 +189,11 @@ function renderAnimals(list) {
       ? `${animal.idade} ano${animal.idade !== 1 ? 's' : ''}`
       : 'Idade não informada';
 
-    const porteTexto = animal.porte
-      ? `${animal.porte} porte`
-      : '';
-
-    /* Link com ?id= para a página de detalhes */
+    const porteTexto = animal.porte ? `${animal.porte} porte` : '';
     const linkDetalhes = `detalhes-animal.html?id=${animal.id}`;
+
+    /* Verifica se já está favoritado para renderizar o coração preenchido */
+    const favoritado = favoritosIds.has(animal.id);
 
     return `
       <article class="animal-card reveal" onclick="window.location.href='${linkDetalhes}'">
@@ -152,6 +201,19 @@ function renderAnimals(list) {
           ${imgHtml}
           <span class="card-badge">✓ Disponível</span>
           <span class="card-species">${av.label}</span>
+
+          <!-- Botão de favoritar -->
+          <button
+            id="fav-btn-${animal.id}"
+            class="fav-btn ${favoritado ? 'favoritado' : ''}"
+            onclick="toggleFavorito(event, ${animal.id})"
+            title="${favoritado ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}"
+            aria-label="${favoritado ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}"
+          >
+            <svg viewBox="0 0 24 24" fill="${favoritado ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </button>
         </div>
         <div class="card-body">
           <div class="card-name">${animal.nome}</div>
@@ -191,13 +253,9 @@ function setupSearchAndFilters() {
         (a.nome || '').toLowerCase().includes(term) ||
         (a.especie || '').toLowerCase().includes(term) ||
         (a.raca || '').toLowerCase().includes(term);
-
-      const matchEspecie = !especie ||
-        (a.especie || '').toLowerCase().includes(especie.toLowerCase());
-      const matchPorte = !porte ||
-        (a.porte || '').toLowerCase() === porte.toLowerCase();
+      const matchEspecie = !especie || (a.especie || '').toLowerCase().includes(especie.toLowerCase());
+      const matchPorte = !porte || (a.porte || '').toLowerCase() === porte.toLowerCase();
       const matchIdade = !idade || a.idadeGrupo === idade;
-
       return matchTerm && matchEspecie && matchPorte && matchIdade;
     });
 
@@ -253,7 +311,6 @@ function initScrollReveal() {
       }
     });
   }, { threshold: 0.1 });
-
   document.querySelectorAll('.reveal:not(.visible)').forEach(el => observer.observe(el));
 }
 
@@ -281,7 +338,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-/* ── Skeleton CSS injetado ── */
+/* ════════════════════════════════════════════
+   SKELETON CSS
+════════════════════════════════════════════ */
 const skeletonStyle = document.createElement('style');
 skeletonStyle.textContent = `
   .card-skeleton {
@@ -295,5 +354,27 @@ skeletonStyle.textContent = `
     0%   { background-position: 200% 0; }
     100% { background-position: -200% 0; }
   }
+
+  /* ── Botão de favoritar no card ── */
+  .fav-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.9);
+    color: #ccc;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, color 0.2s;
+    z-index: 2;
+  }
+  .fav-btn:hover { transform: scale(1.15); color: #e05c7a; }
+  .fav-btn.favoritado { color: #e05c7a; }
+  .fav-btn svg { width: 18px; height: 18px; }
 `;
 document.head.appendChild(skeletonStyle);
