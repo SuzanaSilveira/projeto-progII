@@ -84,26 +84,6 @@ class Animal {
     }
 
     /**
-     * Busca animais filtrando por espécie (uso interno/relatórios).
-     */
-    static buscarPorEspecie(especie) {
-        const linhas = db.prepare(`
-            SELECT * FROM animais WHERE especie = ? ORDER BY created_at DESC
-        `).all(especie);
-        return linhas.map(Animal.fromRow);
-    }
-
-    /**
-     * Busca animais filtrando por porte (uso interno/relatórios).
-     */
-    static buscarPorPorte(porte) {
-        const linhas = db.prepare(`
-            SELECT * FROM animais WHERE porte = ? ORDER BY created_at DESC
-        `).all(porte);
-        return linhas.map(Animal.fromRow);
-    }
-
-    /**
      * Atualiza todos os dados deste animal no banco.
      */
     atualizar() {
@@ -120,18 +100,6 @@ class Animal {
         if (result.changes === 0) {
             throw new AnimalNaoEncontradoError(this.id);
         }
-        return this;
-    }
-
-    /**
-     * Atualiza somente o status deste animal (ex: 'disponivel' -> 'adotado').
-     */
-    atualizarStatus(novoStatus) {
-        const result = db.prepare('UPDATE animais SET status = ? WHERE id = ?').run(novoStatus, this.id);
-        if (result.changes === 0) {
-            throw new AnimalNaoEncontradoError(this.id);
-        }
-        this.status = novoStatus;
         return this;
     }
 
