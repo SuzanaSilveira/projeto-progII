@@ -49,16 +49,6 @@ db.exec(`
         UNIQUE(usuario_id, animal_id)
     );
 
-    CREATE TABLE IF NOT EXISTS notificacoes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        usuario_id INTEGER NOT NULL,
-        titulo TEXT NOT NULL,
-        mensagem TEXT NOT NULL,
-        tipo TEXT DEFAULT 'info',
-        lida INTEGER DEFAULT 0,
-        data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
-    );
 `);
 
 console.log('✅ Banco de dados inicializado com sucesso!');
